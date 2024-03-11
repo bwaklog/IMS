@@ -63,8 +63,8 @@ a file in the future are as follows
 3. `TRANSACTION`    : `class|transid|pid|quan|trandate`
 
 ## Todo
-- [  ] Querrying from file
-- [  ] Storage of buckets
-- [  ] Modifying value of buckets
-- [  ] Deleting Buckets
-- [  ] Implementing a more dynamic Datastructure 
+- [ ] Querrying from file
+- [ ] Storage of buckets
+- [ ] Modifying value of buckets
+- [ ] Deleting Buckets
+- [ ] Implementing a more dynamic Datastructure 
