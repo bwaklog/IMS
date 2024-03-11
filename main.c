@@ -62,33 +62,41 @@ void queryBucket(CLASS class, int id);
 void selectStar();
 void updateBucket(CLASS class, int id);
 
+
+/*
+ * Mini documentation
+ * we have the following classes that are acceptable as a bucket
+ * 1. PRODUCT => value 0
+ * 2. SUPPLIER => value 1
+ * 3. TRANSACTION => value 2
+ *
+ * To store a bucket inside the databuckets array, call the createBucket
+ * method and that will prompt user with required fields and store
+ *
+ * The structure for the following classes outputs that will be stored in
+ * a file in the future are as follows
+ * 1. PRODUCT     => class|pid|pname|pprice|quan
+ * 2. SUPPLIER    => class|supid|supname|supadr
+ * 3. TRANSACTION => class|transid|pid|quan|trandate
+ * */
 int main() {
-  /*
-   * Mini documentation
-   * we have the following classes that are acceptable as a bucket
-   * 1. PRODUCT => value 0
-   * 2. SUPPLIER => value 1
-   * 3. TRANSACTION => value 2
-   *
-   * To store a bucket inside the databuckets array, call the createBucket
-   * method and that will prompt user with required fields and store
-   *
-   * The structure for the following classes outputs that will be stored in
-   * a file in the future are as follows
-   * 1. PRODUCT     => class|pid|pname|pprice|quan
-   * 2. SUPPLIER    => class|supid|supname|supadr
-   * 3. TRANSACTION => class|transid|pid|quan|trandate
-   * */
 
   createBucket(SUPPLIER);
   // createBucket(PRODUCT);
 
   // querrying for specific bucket
-  // queryBucket(SUPPLIER, 1);
-  // selectStar();
+  selectStar();
+
+  // updateBucket(SUPPLIER, 1);
+	
+  createBucket(TRANSACTION);
+
+  selectStar();
 
   return EXIT_SUCCESS;
 }
+
+/* FUNCTION DEFINITIONS */
 
 void createBucket(CLASS class) {
   Bucket *n = malloc(sizeof(Bucket));
@@ -140,7 +148,7 @@ void createBucket(CLASS class) {
     printf("QUAN: ");
     scanf("%d%*c", &n->intcol.quan);
 
-    scanf("TRANDATE: ");
+    printf("TRANDATE: ");
     fgets(n->charcol.trandate, 50, stdin);
     removedNewLine(n->charcol.trandate);
 
@@ -226,4 +234,99 @@ void selectStar() {
   putchar('\n');
 }
 
-void updateBucket(CLASS class, int id) {}
+void updateBucket(CLASS class, int id) {
+
+  Bucket *n = getbucket(class, id);
+  if (n == NULL) {
+    printf("No such bucket found\n");
+    return;
+  }
+
+  printf("UPDATE MENU\n");
+
+  switch (class) {
+  case PRODUCT: {
+    printf(
+        "1. Product Name\n2. Product Price\n3. Quantity\n[OPTN UPDATEDVAL] ");
+
+    int choice;
+    char updated[50];
+
+    scanf("%d", &choice);
+    fgets(updated, 50, stdin);
+    removedNewLine(updated);
+
+    switch (choice) {
+    case 1: {
+      strcpy(n->charcol.pname, updated);
+      return;
+    }
+    case 2: {
+      n->floatcol.pprice = atof(updated);
+      return;
+      ;
+    }
+    case 3: {
+      n->intcol.quan = atoi(updated);
+      return;
+    }
+    default:
+      printf("Invalid choice\n");
+      return;
+    }
+  }
+  case SUPPLIER: {
+    printf("1. Supplier Name\n2. Supplier Address\n[OPTN UPDATEDVAL] ");
+
+    int choice;
+    char updated[50];
+
+    scanf("%d", &choice);
+    fgets(updated, 50, stdin);
+    removedNewLine(updated);
+
+    switch (choice) {
+    case 1: {
+      strcpy(n->charcol.supname, updated);
+      return;
+    }
+    case 2: {
+      strcpy(n->charcol.supadr, updated);
+      return;
+    }
+    default:
+      printf("Invalid choice\n");
+      return;
+    }
+  }
+  case TRANSACTION: {
+    printf("1. Product ID\n2. Product Quantity\n3. Transaction Date\n[OPTN "
+           "UPDATEDVAL] ");
+
+    int choice;
+    char updated[50];
+
+    scanf("%d", &choice);
+    fgets(updated, 50, stdin);
+    removedNewLine(updated);
+
+    switch (choice) {
+    case 1: {
+      n->intcol.pid = atoi(updated);
+      return;
+    }
+    case 2: {
+      n->intcol.quan = atoi(updated);
+      return;
+    }
+    case 3: {
+      strcpy(n->charcol.trandate, updated);
+      return;
+    }
+    default:
+      printf("Invalid choice\n");
+      return;
+    }
+  }
+  }
+}
