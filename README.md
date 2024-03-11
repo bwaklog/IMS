@@ -1,7 +1,3 @@
-# This is a Heading
-
-Struct for Products in project
-
 ```text
     ______  ___
    /  _/  |/  /______  _______
@@ -36,7 +32,7 @@ typedef struct intcol {
 
 ```C
 typedef struct floatcol {
-    float pprice;    
+    float pprice;
 } floatcol;
 ```
 
@@ -67,4 +63,4 @@ a file in the future are as follows
 - [ ] Storage of buckets
 - [ ] Modifying value of buckets
 - [ ] Deleting Buckets
-- [ ] Implementing a more dynamic Datastructure 
+- [ ] Implementing a more dynamic Datastructure

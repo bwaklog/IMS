@@ -25,18 +25,18 @@ typedef struct floatcol {
   float pprice;
 } floatcol;
 
-typedef struct Node {
+typedef struct Bucket {
   CLASS class;
   intcol intcol;
   charcol charcol;
   floatcol floatcol;
-} Node;
+} Bucket;
 
-Node *DATABUCKETS[TOTALBUCKETS];
+Bucket *DATABUCKETS[TOTALBUCKETS];
 int ELEMENTS = 0;
 
-void addNode(CLASS class, intcol intcol, charcol charcol, floatcol floatcol) {
-  Node *n = (Node *)malloc(sizeof(Node));
+void addBucket(CLASS class, intcol intcol, charcol charcol, floatcol floatcol) {
+  Bucket *n = (Bucket *)malloc(sizeof(Bucket));
   n->class = class;
   n->intcol = intcol;
   n->charcol = charcol;
@@ -46,79 +46,21 @@ void addNode(CLASS class, intcol intcol, charcol charcol, floatcol floatcol) {
   ELEMENTS++;
 }
 
-void addAllocatedNode(CLASS class, Node *n) {
+void addAllocatedBucket(CLASS class, Bucket *n) {
   DATABUCKETS[ELEMENTS] = n;
   ELEMENTS++;
 }
 
 void removedNewLine(char *str) {
-    if ((strlen(str) > 0) && (str[strlen(str) - 1] == '\n')) {
-        str[strlen(str) - 1] = '\0';
-    }
-}
-
-void createBucket(CLASS class) {
-  Node *n = malloc(sizeof(Node));
-  switch (class) {
-  case PRODUCT: {
-    n->class = PRODUCT;
-    printf("PID: ");
-    scanf("%d%*c", &n->intcol.pid);
-
-    printf("PNAME: ");
-    fgets(n->charcol.pname, 50, stdin);
-    removedNewLine(n->charcol.pname);
-
-    printf("PPRICE: ");
-    scanf("%f", &n->floatcol.pprice);
-
-    printf("QUAN: ");
-    scanf("%d", &n->intcol.quan);
-
-    addAllocatedNode(PRODUCT, n);
-    putchar('\n');
-    break;
-  }
-  case SUPPLIER: {
-    n->class = SUPPLIER;
-    printf("SUPID: ");
-    scanf("%d%*c", &n->intcol.supid);
-
-    printf("SUPNAME: ");
-    fgets(n->charcol.supname, 50, stdin);
-    removedNewLine(n->charcol.supname);
-
-    printf("SUPADR: ");
-    fgets(n->charcol.supadr, 50, stdin);
-    removedNewLine(n->charcol.supadr);
-
-    addAllocatedNode(SUPPLIER, n);
-    putchar('\n');
-    break;
-  }
-  case TRANSACTION: {
-    n->class = TRANSACTION;
-    printf("TRANSID: ");
-    scanf("%d", &n->intcol.transid);
-
-    printf("PID: ");
-    scanf("%d", &n->intcol.pid);
-
-    printf("QUAN: ");
-    scanf("%d%*c", &n->intcol.quan);
-
-    scanf("TRANDATE: ");
-    fgets(n->charcol.trandate, 50, stdin);
-    removedNewLine(n->charcol.trandate);
-
-    addAllocatedNode(TRANSACTION, n);
-    putchar('\n');
-    break;
-  }
-  default:
-    printf("huh\n");
+  if ((strlen(str) > 0) && (str[strlen(str) - 1] == '\n')) {
+    str[strlen(str) - 1] = '\0';
   }
 }
+
+void createBucket(CLASS class);
+void queryBucket(CLASS class, int id);
+void selectStar();
+void updateBucket(CLASS class, int id);
 
 int main() {
   /*
@@ -139,10 +81,126 @@ int main() {
    * */
 
   createBucket(SUPPLIER);
-  createBucket(PRODUCT);
+  // createBucket(PRODUCT);
 
+  // querrying for specific bucket
+  // queryBucket(SUPPLIER, 1);
+  // selectStar();
+
+  return EXIT_SUCCESS;
+}
+
+void createBucket(CLASS class) {
+  Bucket *n = malloc(sizeof(Bucket));
+  switch (class) {
+  case PRODUCT: {
+    n->class = PRODUCT;
+    printf("PID: ");
+    scanf("%d%*c", &n->intcol.pid);
+
+    printf("PNAME: ");
+    fgets(n->charcol.pname, 50, stdin);
+    removedNewLine(n->charcol.pname);
+
+    printf("PPRICE: ");
+    scanf("%f", &n->floatcol.pprice);
+
+    printf("QUAN: ");
+    scanf("%d", &n->intcol.quan);
+
+    addAllocatedBucket(PRODUCT, n);
+    putchar('\n');
+    break;
+  }
+  case SUPPLIER: {
+    n->class = SUPPLIER;
+    printf("SUPID: ");
+    scanf("%d%*c", &n->intcol.supid);
+
+    printf("SUPNAME: ");
+    fgets(n->charcol.supname, 50, stdin);
+    removedNewLine(n->charcol.supname);
+
+    printf("SUPADR: ");
+    fgets(n->charcol.supadr, 50, stdin);
+    removedNewLine(n->charcol.supadr);
+
+    addAllocatedBucket(SUPPLIER, n);
+    putchar('\n');
+    break;
+  }
+  case TRANSACTION: {
+    n->class = TRANSACTION;
+    printf("TRANSID: ");
+    scanf("%d", &n->intcol.transid);
+
+    printf("PID: ");
+    scanf("%d", &n->intcol.pid);
+
+    printf("QUAN: ");
+    scanf("%d%*c", &n->intcol.quan);
+
+    scanf("TRANDATE: ");
+    fgets(n->charcol.trandate, 50, stdin);
+    removedNewLine(n->charcol.trandate);
+
+    addAllocatedBucket(TRANSACTION, n);
+    putchar('\n');
+    break;
+  }
+  default:
+    printf("huh\n");
+  }
+}
+
+Bucket *getbucket(CLASS class, int id) {
   for (int i = 0; i < ELEMENTS; i++) {
-    Node *n = DATABUCKETS[i];
+    Bucket *n = *(DATABUCKETS + i);
+    if (n->class == class) {
+      switch (class) {
+      case PRODUCT:
+        if (n->intcol.pid == id)
+          return n;
+      case SUPPLIER:
+        if (n->intcol.supid == id)
+          return n;
+      case TRANSACTION:
+        if (n->intcol.transid == id)
+          return n;
+      }
+    }
+  }
+  return NULL;
+}
+
+void queryBucket(CLASS class, int id) {
+  Bucket *n = getbucket(class, id);
+  if (n == NULL) {
+    printf("no such bucket found\n");
+    return;
+  }
+  switch (class) {
+  case PRODUCT: {
+    printf("%d|%d|%s|%f|%d\n", n->class, n->intcol.pid, n->charcol.pname,
+           n->floatcol.pprice, n->intcol.quan);
+    return;
+  }
+  case SUPPLIER: {
+    printf("%d|%d|%s|%s\n", n->class, n->intcol.supid, n->charcol.supname,
+           n->charcol.supadr);
+    return;
+  }
+  case TRANSACTION: {
+    printf("%d|%d|%d|%d|%s\n", n->class, n->intcol.transid, n->intcol.pid,
+           n->intcol.quan, n->charcol.trandate);
+    return;
+  }
+  }
+}
+
+void selectStar() {
+  for (int i = 0; i < ELEMENTS; i++) {
+    Bucket *n = DATABUCKETS[i];
     switch (n->class) {
     case PRODUCT: {
       printf("%d|%d|%s|%f|%d\n", n->class, n->intcol.pid, n->charcol.pname,
@@ -165,6 +223,7 @@ int main() {
       printf("huh\n");
     }
   }
-
-  return EXIT_SUCCESS;
+  putchar('\n');
 }
+
+void updateBucket(CLASS class, int id) {}
