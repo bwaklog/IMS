@@ -8,7 +8,9 @@
 Inventory Management System written in C
 ```
 
-## Structures and storage
+> All the below can be found in commit `7a7f3e`
+
+## FUTURE: Structures and storage
 
 We have the following classes that are acceptable as a bucket
 1. `PRODUCT`        : value `0`
