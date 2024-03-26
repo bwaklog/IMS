@@ -1,9 +1,10 @@
-mainfile = "src/main.c"
-helperfile = "helper/helper.c"
-products = "src/products/products.c"
-transactions = "src/transactions/transactions.c"
-suppliers = "src/suppliers/suppliers.c"
+CC = gcc
+
+CFLAGS = -Wall -Wextra -Werror -Wpedantic -std=c99 -g
+
+DEPS = helper/helper.c src/products/products.c src/transactions/transactions.c src/suppliers/suppliers.c
+SRC = "src/main.c"
 
 
 all:
-	gcc ${helperfile} ${products} ${transactions} ${suppliers} ${mainfile} -o main
+	gcc ${CFLAGS} ${DEPS} ${SRC} -o main

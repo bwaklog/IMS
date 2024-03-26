@@ -12,9 +12,9 @@ extern char product_names[MAX][MAX_STR_LEN];
 extern float product_prices[MAX];
 extern int product_quantities[MAX];
 
-void append_product();
-void display_product();
-void update_product();
-void remove_product();
+void append_product(void);
+void display_product(void);
+void update_product(void);
+void remove_product(void);
 
 #endif // !PRODUCTS_H

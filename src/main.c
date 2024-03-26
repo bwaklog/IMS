@@ -4,28 +4,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// DEFINE: Product Arrays
 int product_ids[MAX];
 char product_names[MAX][MAX_STR_LEN];
 float product_prices[MAX];
 int product_quantities[MAX];
 
+// DEFINE: Supplier Arrays
 int supplier_ids[MAX];
 char supplier_names[MAX][MAX_STR_LEN];
 char supplier_address[MAX][MAX_STR_LEN];
 
+// DEFINE: Transaction Arrays
 int transaction_ids[MAX];
 int transaction_product_ids[MAX];
 int transactions_quantities[MAX];
 char transaction_dates[MAX][MAX_STR_LEN];
 
+// DEFINE: Counters for product, supplier and transactions arrays
 int product_count = 0;
 int supplier_count = 0;
 int transaction_count = 0;
 
-int main() {
+// Main function
+int main(void) {
   printf("IMS\n");
-  char choice;
-  char subchoice;
+  char choice = '\0';
+  char subchoice = '\0';
 
   while (choice != 'q') {
     printf("1.Product Mode\n2. Supplier Mode\n3. Transaction Mode\nq. "

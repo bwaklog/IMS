@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void append_transaction() {
+void append_transaction(void) {
   if (transaction_count == MAX) {
     printf("transaction limit reached\n");
     return;
@@ -25,7 +25,7 @@ void append_transaction() {
   transaction_count++;
 }
 
-void display_transaction() {
+void display_transaction(void) {
   if (transaction_count == 0) {
     printf("=== NO transactionS ===\n");
     return;
@@ -37,7 +37,7 @@ void display_transaction() {
            transaction_dates[i]);
   }
 }
-void update_transaction() {
+void update_transaction(void) {
   int pid;
   printf("Enter PID to update: ");
   scanf("%d%*c", &pid);

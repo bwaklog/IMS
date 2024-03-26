@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void append_product() {
+void append_product(void) {
   if (product_count == MAX) {
     printf("Product limit reached\n");
     return;
@@ -24,7 +24,7 @@ void append_product() {
   product_count++;
 }
 
-void display_product() {
+void display_product(void) {
   if (product_count == 0) {
     printf("=== NO PRODUCTS ===\n");
     return;
@@ -35,7 +35,7 @@ void display_product() {
            product_prices[i], product_quantities[i]);
   }
 }
-void update_product() {
+void update_product(void) {
   int pid;
   printf("Enter PID to update: ");
   scanf("%d%*c", &pid);
@@ -76,7 +76,7 @@ void update_product() {
     }
   }
 }
-void remove_product() {
+void remove_product(void) {
   // delete element from an array
   int pid;
   printf("Enter PID to delete: ");

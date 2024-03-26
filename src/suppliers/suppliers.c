@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-void append_supplier() {
+void append_supplier(void) {
   if (supplier_count == MAX) {
     printf("supplier limit reached\n");
     return;
@@ -22,7 +22,7 @@ void append_supplier() {
   supplier_count++;
 }
 
-void display_supplier() {
+void display_supplier(void) {
   if (supplier_count == 0) {
     printf("=== NO supplierS ===\n");
     return;
@@ -34,7 +34,7 @@ void display_supplier() {
   }
 }
 
-void update_supplier() {
+void update_supplier(void) {
   int pid;
   printf("Enter PID to update: ");
   scanf("%d%*c", &pid);
@@ -71,7 +71,7 @@ void update_supplier() {
   }
 }
 
-void remove_supplier() {
+void remove_supplier(void) {
   // delete element from an array
   int pid;
   printf("Enter PID to delete: ");
