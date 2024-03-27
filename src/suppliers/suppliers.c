@@ -9,7 +9,14 @@ void append_supplier(void) {
     return;
   }
   printf("Enter supplier id: ");
-  scanf("%d%*c", &supplier_ids[supplier_count]);
+  int supid;
+  scanf("%d%*c", &supid);
+
+  if (check_existing(supid, supplier_ids, supplier_count)) {
+    printf("=== EXISTING SUPPLIER ID FOUND ===\n");
+    return;
+  }
+  supplier_ids[supplier_count] = supid;
 
   printf("Enter supplier name: ");
   fgets(supplier_names[supplier_count], MAX_STR_LEN, stdin);
@@ -27,25 +34,42 @@ void display_supplier(void) {
     printf("=== NO supplierS ===\n");
     return;
   }
-  printf("PID\t\tPNAME\t\tADDRESS\n");
+
+  printf("====================================================================="
+         "=======\n");
+  printf("%-10s\t\t%-20s\t\t%-20s\n", "Supplier ID", "Supplier Name",
+         "Supplier Address");
+  printf("====================================================================="
+         "=======\n");
+
   for (int i = 0; i < supplier_count; i++) {
-    printf("%d\t\t%s\t\t%s\n", supplier_ids[i], supplier_names[i],
-           supplier_address[i]);
+    char sname[MAX_STR_LEN];
+    char saddr[MAX_STR_LEN];
+    strcpy(sname, supplier_names[i]);
+    strcpy(saddr, supplier_address[i]);
+    // truncate the string
+    if (strlen(sname) > 20) {
+      sname[20] = '\0';
+    }
+    if (strlen(saddr) > 20) {
+      saddr[20] = '\0';
+    }
+    printf("%-10d\t\t%-20s\t\t%-s\n", supplier_ids[i], sname, saddr);
   }
 }
 
 void update_supplier(void) {
-  int pid;
+  int supid;
   printf("Enter PID to update: ");
-  scanf("%d%*c", &pid);
+  scanf("%d%*c", &supid);
 
-  if (pid > supplier_count) {
-    printf("=== NO SUCH supplier EXISTS ===\n");
+  if (!check_existing(supid, supplier_ids, supplier_count)) {
+    printf("=== EXISTING SUPPLIER ID FOUND ===\n");
     return;
   }
 
   for (int i = 0; i < supplier_count; i++) {
-    if (supplier_ids[i] == pid) {
+    if (supplier_ids[i] == supid) {
       // this is temp storage for each input
       char buff[MAX_STR_LEN];
 
@@ -73,17 +97,17 @@ void update_supplier(void) {
 
 void remove_supplier(void) {
   // delete element from an array
-  int pid;
-  printf("Enter PID to delete: ");
-  scanf("%d%*c", &pid);
+  int supid;
+  printf("Enter PID to update: ");
+  scanf("%d%*c", &supid);
 
-  if (pid > supplier_count) {
-    printf("=== NO SUCH supplier EXISTS ===\n");
+  if (!check_existing(supid, supplier_ids, supplier_count)) {
+    printf("=== EXISTING SUPPLIER ID FOUND ===\n");
     return;
   }
 
   for (int i = 0; i < supplier_count; i++) {
-    if (supplier_ids[i] == pid) {
+    if (supplier_ids[i] == supid) {
       for (int j = i; j < supplier_count - 1; j++) {
         supplier_ids[j] = supplier_ids[j + 1];
         strcpy(supplier_names[j], supplier_names[j + 1]);

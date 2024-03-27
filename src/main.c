@@ -28,11 +28,11 @@ int transaction_count = 0;
 
 // Main function
 int main(void) {
-  printf("IMS\n");
   char choice = '\0';
   char subchoice = '\0';
 
   while (choice != 'q') {
+    printf("=== INVENTORY MANAGEMENT SYSTEM ===\n");
     printf("1.Product Mode\n2. Supplier Mode\n3. Transaction Mode\nq. "
            "Quit\n(1/2/3/q): ");
     scanf("%c", &choice);
@@ -46,6 +46,7 @@ int main(void) {
 
     // Below switch cases handle for product mode
     case '1':
+      clear();
       printf("1. Add Products\n2. Update Product\n3. Delete Product\n4. "
              "Display Products\nq. Exit Product Mode\n(1/2/3/4/q): ");
       scanf("%c", &subchoice);
@@ -53,22 +54,30 @@ int main(void) {
       switch (subchoice) {
         putchar('\n');
       case '1':
+        clear();
         printf("adding product\n");
+        clear();
         append_product();
         break;
       case '2':
+        clear();
         printf("update product\n");
+        clear();
         update_product();
         break;
       case '3':
+        clear();
         printf("delete product\n");
         remove_product();
+        clear();
         break;
       case '4':
-        printf("display product\n");
+        clear();
+        printf("~ PRODUCT TABLE ~\n");
         display_product();
         break;
       case 'q':
+        clear();
         printf("exiting product mode\n");
         break;
       default:
@@ -79,6 +88,7 @@ int main(void) {
 
     // Below switch cases handle for supplier mode
     case '2':
+      clear();
       printf("1. Add Supplier\n2. Update Supplier Details\n3. Delete Supplier "
              "Details\n4. "
              "Display Suppliers\nq. Exit Supplier Mode\n(1/2/3/4/q): ");
@@ -87,22 +97,30 @@ int main(void) {
       switch (subchoice) {
         putchar('\n');
       case '1':
+        clear();
         printf("adding product\n");
+        clear();
         append_supplier();
         break;
       case '2':
+        clear();
         printf("update supplier\n");
+        clear();
         update_supplier();
         break;
       case '3':
+        clear();
         printf("delete supplier\n");
+        clear();
         remove_supplier();
         break;
       case '4':
+        clear();
         printf("display supplier\n");
         display_supplier();
         break;
       case 'q':
+        clear();
         printf("exiting supplier mode\n");
         break;
       default:
@@ -114,6 +132,7 @@ int main(void) {
 
     // Below switch cases handle for transaction mode
     case '3':
+      clear();
       printf("1. Add Transaction\n2. Update Transaction\n"
              "3. Display Products\nq. Exit Transaction Mode\n(1/2/3/q): ");
       scanf("%c", &subchoice);
@@ -121,21 +140,28 @@ int main(void) {
       switch (subchoice) {
         putchar('\n');
       case '1':
+        clear();
         printf("adding transaction\n");
+        clear();
         append_transaction();
         break;
       case '2':
+        clear();
         printf("update transaction\n");
+        clear();
         update_transaction();
         break;
       case '3':
+        clear();
         printf("display transaction\n");
         display_transaction();
         break;
       case 'q':
+        clear();
         printf("exiting transaction mode\n");
         break;
       default:
+        clear();
         printf("invalid transaction mode operation\n");
       }
       putchar('\n');
@@ -144,10 +170,12 @@ int main(void) {
 
     // Below switch cases handle for transaction mode
     case 'q':
-      printf("exiting\n");
+      clear();
+      printf("~ EXITTING IMS ~\n");
       break;
     default:
-      printf("invlalid\n");
+      clear();
+      printf("~ INVALID ~\n");
     }
   }
   return EXIT_SUCCESS; // EXIT_SUCCESS = 0

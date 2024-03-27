@@ -10,3 +10,12 @@ void remove_newlien_char(char *str) {
     }
   }
 }
+
+int check_existing(int pid, int id_array[], int max_count) {
+  for (int i = 0; i < max_count; i++) {
+    if (id_array[i] == pid) {
+      return 1;
+    }
+  }
+  return 0;
+}

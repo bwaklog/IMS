@@ -3,8 +3,6 @@
 #define PRODUCTS_H
 #include "../../helper/helper.h"
 
-#define MAX 5
-
 extern int product_count;
 
 extern int product_ids[MAX];

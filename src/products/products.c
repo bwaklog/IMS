@@ -10,7 +10,16 @@ void append_product(void) {
     return;
   }
   printf("Enter product id: ");
-  scanf("%d%*c", &product_ids[product_count]);
+  int pid;
+  // scanf("%d%*c", &product_ids[product_count]);
+  scanf("%d%*c", &pid);
+
+  //  checking for existing id, exit if found
+  if (check_existing(pid, product_ids, product_count)) {
+    printf("=== PREXISTING ID FOUND ===\n");
+    return;
+  }
+  product_ids[product_count] = pid;
 
   printf("Enter product name: ");
   fgets(product_names[product_count], MAX_STR_LEN, stdin);
@@ -29,18 +38,34 @@ void display_product(void) {
     printf("=== NO PRODUCTS ===\n");
     return;
   }
-  printf("PID\t\tPNAME\t\tPRICE\t\tQUANTITY\n");
+
+  printf("================================================================="
+         "===="
+         "===========================\n");
+  printf("%-10s\t\t%-20s\t\t%-15s\t\t%-10s\n", "Product ID", "Product Name",
+         "Product Price", "Product Quantity");
+  printf("====================================================================="
+         "===========================\n");
+
   for (int i = 0; i < product_count; i++) {
-    printf("%d\t\t%s\t\t%f\t\t%d\n", product_ids[i], product_names[i],
+    char pname[MAX_STR_LEN];
+    strcpy(pname, product_names[i]);
+    // truncate the string
+    if (strlen(pname) > 20) {
+      pname[20] = '\0';
+    }
+    printf("%-10d\t\t%-20s\t\t%-15.2f\t\t%-10d\n", product_ids[i], pname,
            product_prices[i], product_quantities[i]);
   }
 }
+
 void update_product(void) {
   int pid;
   printf("Enter PID to update: ");
   scanf("%d%*c", &pid);
 
-  if (pid > product_count) {
+  // check for prexisting id, exit if function returns 0
+  if (!check_existing(pid, product_ids, product_count)) {
     printf("=== NO SUCH PRODUCT EXISTS ===\n");
     return;
   }
@@ -76,13 +101,15 @@ void update_product(void) {
     }
   }
 }
+
 void remove_product(void) {
   // delete element from an array
   int pid;
   printf("Enter PID to delete: ");
   scanf("%d%*c", &pid);
 
-  if (pid > product_count) {
+  // check for prexisting id, exit if function returns 0
+  if (!check_existing(pid, product_ids, product_count)) {
     printf("=== NO SUCH PRODUCT EXISTS ===\n");
     return;
   }
