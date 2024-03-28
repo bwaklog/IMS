@@ -1,5 +1,6 @@
 #include "transactions.h"
 #include "../../helper/helper.h"
+#include "../products/products.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -22,10 +23,25 @@ void append_transaction(void) {
   transaction_ids[transaction_count] = transid;
 
   printf("Enter transaction product id: ");
-  scanf("%d%*c", &transaction_product_ids[transaction_count]);
+  int pid;
+  scanf("%d%*c", &pid);
+
+  if (!check_existing(pid, product_ids, product_count)) {
+    printf("=== PRODUCT WITH ID %d DOES NOT EXIST ===\n", pid);
+    return;
+  }
+  transaction_product_ids[transaction_count] = pid;
 
   printf("Enter transaction quantity: ");
-  scanf("%d%*c", &transactions_quantities[transaction_count]);
+  int quantity;
+  scanf("%d%*c", &quantity);
+  int available = get_product_quantity(pid);
+  if (quantity > available) {
+    printf("=== QUANTITY EXCEEDS AVAILABLE STOCK ===\n");
+    return;
+  }
+
+  update_stock(pid, quantity);
 
   printf("Enter transaction date: ");
   fgets(transaction_dates[transaction_count], MAX_STR_LEN, stdin);
@@ -38,13 +54,6 @@ void display_transaction(void) {
   if (transaction_count == 0) {
     printf("=== NO transactionS ===\n");
     return;
-  }
-
-  printf("TID\t\tTPID\t\tTQUAN\t\tDATE\n");
-  for (int i = 0; i < transaction_count; i++) {
-    printf("%d\t\t%d\t\t%d\t\t%s\n", transaction_ids[i],
-           transaction_product_ids[i], transactions_quantities[i],
-           transaction_dates[i]);
   }
 
   printf("====================================================================="

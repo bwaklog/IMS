@@ -4,6 +4,24 @@
 #include <stdlib.h>
 #include <string.h>
 
+int get_product_quantity(int pid) {
+  for (int i = 0; i < product_count; i++) {
+    if (product_ids[i] == pid) {
+      return product_quantities[i];
+    }
+  }
+  return 0;
+}
+
+void update_stock(int pid, int withdrawn) {
+  for (int i = 0; i < product_count; i++) {
+    if (product_ids[i] == pid) {
+      product_quantities[i] -= withdrawn;
+      return;
+    }
+  }
+}
+
 void append_product(void) {
   if (product_count == MAX) {
     printf("Product limit reached\n");
