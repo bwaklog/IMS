@@ -19,12 +19,10 @@ void append_supplier(void) {
   supplier_ids[supplier_count] = supid;
 
   printf("Enter supplier name: ");
-  fgets(supplier_names[supplier_count], MAX_STR_LEN, stdin);
-  remove_newlien_char(supplier_names[supplier_count]);
+  scanf("%[^\n]%*c", supplier_names[supplier_count]);
 
   printf("Enter supplier address: ");
-  fgets(supplier_address[supplier_count], MAX_STR_LEN, stdin);
-  remove_newlien_char(supplier_address[supplier_count]);
+  scanf("%[^\n]%*c", supplier_address[supplier_count]);
 
   supplier_count++;
 }

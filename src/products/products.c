@@ -40,8 +40,7 @@ void append_product(void) {
   product_ids[product_count] = pid;
 
   printf("Enter product name: ");
-  fgets(product_names[product_count], MAX_STR_LEN, stdin);
-  remove_newlien_char(product_names[product_count]);
+  scanf("%[^\n]%*c", product_names[product_count]);
 
   printf("Enter product price: ");
   scanf("%f%*c", &product_prices[product_count]);
@@ -96,6 +95,7 @@ void update_product(void) {
       printf("Hit Enter to accept current value\n");
       printf("Product Name(%s): ", product_names[i]);
       // accept default if enter pressed
+
       fgets(buff, MAX_STR_LEN, stdin);
       if (buff[0] != '\n') {
         remove_newlien_char(buff);

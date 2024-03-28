@@ -45,7 +45,7 @@ void append_transaction(void) {
 
   printf("Enter transaction date: ");
   fgets(transaction_dates[transaction_count], MAX_STR_LEN, stdin);
-  remove_newlien_char(transaction_dates[transaction_count]);
+  scanf("%[^\n]%*c", transaction_dates[transaction_count]);
 
   transaction_count++;
 }
