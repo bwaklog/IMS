@@ -1,6 +1,7 @@
 #include "suppliers.h"
 #include "../../helper/helper.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 void append_supplier(void) {
@@ -12,17 +13,20 @@ void append_supplier(void) {
   int supid;
   scanf("%d%*c", &supid);
 
-  if (check_existing(supid, supplier_ids, supplier_count)) {
+  if (check_existing(supid, SUPPLIER, supplier_count)) {
     printf("=== EXISTING SUPPLIER ID FOUND ===\n");
     return;
   }
-  supplier_ids[supplier_count] = supid;
+
+  supplier_ds = realloc(supplier_ds, supplier_count + 1);
+
+  supplier_ds[supplier_count].supplier_id = supid;
 
   printf("Enter supplier name: ");
-  scanf("%[^\n]%*c", supplier_names[supplier_count]);
+  scanf("%[^\n]%*c", supplier_ds[supplier_count].supplier_name);
 
   printf("Enter supplier address: ");
-  scanf("%[^\n]%*c", supplier_address[supplier_count]);
+  scanf("%[^\n]%*c", supplier_ds[supplier_count].supplier_addr);
 
   supplier_count++;
 }
@@ -43,8 +47,8 @@ void display_supplier(void) {
   for (int i = 0; i < supplier_count; i++) {
     char sname[MAX_STR_LEN];
     char saddr[MAX_STR_LEN];
-    strcpy(sname, supplier_names[i]);
-    strcpy(saddr, supplier_address[i]);
+    strcpy(sname, supplier_ds[i].supplier_name);
+    strcpy(saddr, supplier_ds[i].supplier_addr);
     // truncate the string
     if (strlen(sname) > 20) {
       sname[20] = '\0';
@@ -52,7 +56,8 @@ void display_supplier(void) {
     if (strlen(saddr) > 20) {
       saddr[20] = '\0';
     }
-    printf("%-10d\t\t%-20s\t\t%-s\n", supplier_ids[i], sname, saddr);
+    printf("%-10d\t\t%-20s\t\t%-s\n", supplier_ds[i].supplier_id,
+           supplier_ds[i].supplier_name, supplier_ds[i].supplier_addr);
   }
 }
 
@@ -61,33 +66,33 @@ void update_supplier(void) {
   printf("Enter PID to update: ");
   scanf("%d%*c", &supid);
 
-  if (!check_existing(supid, supplier_ids, supplier_count)) {
+  if (!check_existing(supid, SUPPLIER, supplier_count)) {
     printf("=== EXISTING SUPPLIER ID FOUND ===\n");
     return;
   }
 
   for (int i = 0; i < supplier_count; i++) {
-    if (supplier_ids[i] == supid) {
+    if (supplier_ds[i].supplier_id == supid) {
       // this is temp storage for each input
       char buff[MAX_STR_LEN];
 
       printf("Hit Enter to accept current value\n");
-      printf("supplier Name(%s): ", supplier_names[i]);
+      printf("supplier Name(%s): ", supplier_ds[i].supplier_name);
       // accept default if enter pressed
       fgets(buff, MAX_STR_LEN, stdin);
       if (buff[0] != '\n') {
         remove_newlien_char(buff);
         printf("%s\n", buff);
-        strcpy(supplier_names[i], buff);
+        strcpy(supplier_ds[i].supplier_name, buff);
       }
 
-      printf("supplier address(%s): ", supplier_address[i]);
+      printf("supplier address(%s): ", supplier_ds[i].supplier_name);
       // accept default if enter pressed
       fgets(buff, MAX_STR_LEN, stdin);
       if (buff[0] != '\n') {
         remove_newlien_char(buff);
         printf("%s\n", buff);
-        strcpy(supplier_address[i], buff);
+        strcpy(supplier_ds[i].supplier_name, buff);
       }
     }
   }
@@ -99,19 +104,18 @@ void remove_supplier(void) {
   printf("Enter PID to update: ");
   scanf("%d%*c", &supid);
 
-  if (!check_existing(supid, supplier_ids, supplier_count)) {
+  if (!check_existing(supid, SUPPLIER, supplier_count)) {
     printf("=== EXISTING SUPPLIER ID FOUND ===\n");
     return;
   }
 
   for (int i = 0; i < supplier_count; i++) {
-    if (supplier_ids[i] == supid) {
+    if (supplier_ds[i].supplier_id == supid) {
       for (int j = i; j < supplier_count - 1; j++) {
-        supplier_ids[j] = supplier_ids[j + 1];
-        strcpy(supplier_names[j], supplier_names[j + 1]);
-        strcpy(supplier_address[j], supplier_address[j + 1]);
+        supplier_ds[j] = supplier_ds[j + 1];
       }
       supplier_count--;
+      supplier_ds = realloc(supplier_ds, supplier_count);
       break;
     }
   }

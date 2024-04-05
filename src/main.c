@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 // DEFINE: Product Arrays
 int product_ids[MAX];
 char product_names[MAX][MAX_STR_LEN];
@@ -28,6 +29,11 @@ int transaction_count = 0;
 
 // Main function
 int main(void) {
+  // allocating memory for the ds's;
+  product_ds = (Product *)calloc(sizeof(Product), product_count);
+  supplier_ds = (Supplier *)calloc(sizeof(Supplier), supplier_count);
+  transaction_ds = (Transaction *)calloc(sizeof(Transaction), transaction_count);
+
   char choice = '\0';
   char subchoice = '\0';
 
@@ -172,6 +178,11 @@ int main(void) {
     case 'q':
       clear();
       printf("~ EXITTING IMS ~\n");
+      // print size of each ds
+      printf("%lu", sizeof(*product_ds));
+      free(product_ds);
+      free(supplier_ds);
+      free(transaction_ds);
       break;
     default:
       clear();

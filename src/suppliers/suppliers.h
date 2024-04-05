@@ -7,10 +7,6 @@
 
 extern int supplier_count;
 
-extern int supplier_ids[MAX];
-extern char supplier_names[MAX][MAX_STR_LEN];
-extern char supplier_address[MAX][MAX_STR_LEN];
-
 void append_supplier(void);
 void display_supplier(void);
 void update_supplier(void);

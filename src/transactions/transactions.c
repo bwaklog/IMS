@@ -16,21 +16,24 @@ void append_transaction(void) {
   int transid;
   scanf("%d%*c", &transid);
 
-  if (check_existing(transid, transaction_ids, transaction_count)) {
+  if (check_existing(transid, TRANSACTION, transaction_count)) {
     printf("=== TRANSACTION WITH ID %d ALREADY EXISTS ===\n", transid);
     return;
   }
-  transaction_ids[transaction_count] = transid;
+
+  transaction_ds = realloc(transaction_ds, transaction_count + 1);
+
+  transaction_ds[transaction_count].transaction_id = transid;
 
   printf("Enter transaction product id: ");
   int pid;
   scanf("%d%*c", &pid);
 
-  if (!check_existing(pid, product_ids, product_count)) {
+  if (!check_existing(pid, PRODUCT, product_count)) {
     printf("=== PRODUCT WITH ID %d DOES NOT EXIST ===\n", pid);
     return;
   }
-  transaction_product_ids[transaction_count] = pid;
+  transaction_ds[transaction_count].transaction_product_id = pid;
 
   printf("Enter transaction quantity: ");
   int quantity;
@@ -42,10 +45,12 @@ void append_transaction(void) {
   }
 
   update_stock(pid, quantity);
+  transaction_ds[transaction_count].transaction_quantity = quantity;
 
   printf("Enter transaction date: ");
-  fgets(transaction_dates[transaction_count], MAX_STR_LEN, stdin);
-  scanf("%[^\n]%*c", transaction_dates[transaction_count]);
+  // fgets(transaction_dates[transaction_count], MAX_STR_LEN, stdin);
+  scanf("%[^\n]%*c", transaction_ds[transaction_count].transaction_date);
+  // remove_newlien_char(transaction_dates[transaction_count]);
 
   transaction_count++;
 }
@@ -65,14 +70,16 @@ void display_transaction(void) {
 
   for (int i = 0; i < transaction_count; i++) {
     char tdate[MAX_STR_LEN];
-    strcpy(tdate, transaction_dates[i]);
+    strcpy(tdate, transaction_ds[i].transaction_date);
     // truncate the string
     if (strlen(tdate) > 20) {
       tdate[20] = '\0';
     }
-    printf("%-10d\t\t%-10d\t\t%-10d\t\t%-20s\n", transaction_ids[i],
-           transaction_product_ids[i], transactions_quantities[i],
-           transaction_dates[i]);
+    printf("%-10d\t\t%-10d\t\t%-10d\t\t%-20s\n",
+           transaction_ds[i].transaction_id,
+           transaction_ds[i].transaction_product_id,
+           transaction_ds[i].transaction_quantity,
+           transaction_ds[i].transaction_date);
   }
 }
 void update_transaction(void) {
@@ -80,39 +87,40 @@ void update_transaction(void) {
   printf("Enter PID to update: ");
   scanf("%d%*c", &transid);
 
-  if (check_existing(transid, transaction_ids, transaction_count)) {
+  if (check_existing(transid, TRANSACTION, transaction_count)) {
     printf("=== TRANSACTION WITH ID %d ALREADY EXISTS ===\n", transid);
     return;
   }
 
   for (int i = 0; i < transaction_count; i++) {
-    if (transaction_ids[i] == transid) {
+    if (transaction_ds[i].transaction_id == transid) {
       // this is temp storage for each input
       char buff[MAX_STR_LEN];
 
       printf("Hit Enter to accept current value\n");
-      printf("transaction PID(%d): ", transaction_product_ids[i]);
+      printf("transaction PID(%d): ", transaction_ds[i].transaction_product_id);
       // accept default if enter pressed
       fgets(buff, MAX_STR_LEN, stdin);
       if (buff[0] != '\n') {
         remove_newlien_char(buff);
         printf("%s\n", buff);
-        transaction_product_ids[i] = atoi(buff);
+        transaction_ds[i].transaction_id = atoi(buff);
       }
 
-      printf("transaction quantity(%d): ", transactions_quantities[i]);
+      printf("transaction quantity(%d): ",
+             transaction_ds[i].transaction_quantity);
       fgets(buff, MAX_STR_LEN, stdin);
       if (buff[0] != '\n') {
         remove_newlien_char(buff);
         printf("%s\n", buff);
-        transactions_quantities[i] = atoi(buff);
+        transaction_ds[i].transaction_quantity = atoi(buff);
       }
 
-      printf("transaction Date(%s): ", transaction_dates[i]);
+      printf("transaction Date(%s): ", transaction_ds[i].transaction_date);
       fgets(buff, MAX_STR_LEN, stdin);
       if (buff[0] != '\n') {
         remove_newlien_char(buff);
-        strcpy(transaction_dates[i], buff);
+        strcpy(transaction_ds[i].transaction_date, buff);
       }
     }
   }
