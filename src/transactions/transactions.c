@@ -12,28 +12,29 @@ void append_transaction(void) {
     return;
   }
 
+  Node *tnode = (Node *)malloc(sizeof(Node));
+
   printf("Enter transaction id: ");
+
   int transid;
   scanf("%d%*c", &transid);
 
-  if (check_existing(transid, TRANSACTION, transaction_count)) {
+  if (check_existing(transid, TRANSACTION)) {
     printf("=== TRANSACTION WITH ID %d ALREADY EXISTS ===\n", transid);
     return;
   }
 
-  transaction_ds = realloc(transaction_ds, transaction_count + 1);
-
-  transaction_ds[transaction_count].transaction_id = transid;
+  tnode->node_data.transaction.transaction_id = transid;
 
   printf("Enter transaction product id: ");
   int pid;
   scanf("%d%*c", &pid);
 
-  if (!check_existing(pid, PRODUCT, product_count)) {
+  if (!check_existing(pid, PRODUCT)) {
     printf("=== PRODUCT WITH ID %d DOES NOT EXIST ===\n", pid);
     return;
   }
-  transaction_ds[transaction_count].transaction_product_id = pid;
+  tnode->node_data.transaction.transaction_product_id = pid;
 
   printf("Enter transaction quantity: ");
   int quantity;
@@ -45,12 +46,21 @@ void append_transaction(void) {
   }
 
   update_stock(pid, quantity);
-  transaction_ds[transaction_count].transaction_quantity = quantity;
+  tnode->node_data.transaction.transaction_quantity = quantity;
 
   printf("Enter transaction date: ");
-  // fgets(transaction_dates[transaction_count], MAX_STR_LEN, stdin);
-  scanf("%[^\n]%*c", transaction_ds[transaction_count].transaction_date);
-  // remove_newlien_char(transaction_dates[transaction_count]);
+  scanf("%[^\n]%*c", tnode->node_data.transaction.transaction_date);
+
+  int hash = generate_hash(tnode->node_data.transaction.transaction_id);
+  Node *head = tran_map[hash];
+
+  if (head == NULL) {
+      tran_map[hash] = tnode;
+  } else {
+      tnode->next = head;
+      tran_map[hash] = tnode;
+  }
+
 
   transaction_count++;
 }
@@ -60,67 +70,76 @@ void display_transaction(void) {
     printf("=== NO transactionS ===\n");
     return;
   }
+  for (int i = 0; i < MAPSIZE; i++) {
+    Node *ptr = tran_map[i];
 
-  printf("====================================================================="
-         "===========================\n");
-  printf("%-10s\t\t%-10s\t\t%-10s\t\t%-10s\n", "Transaction ID", "Product ID",
-         "Transaction Quantity", "Transaction Date");
-  printf("====================================================================="
-         "===========================\n");
-
-  for (int i = 0; i < transaction_count; i++) {
-    char tdate[MAX_STR_LEN];
-    strcpy(tdate, transaction_ds[i].transaction_date);
-    // truncate the string
-    if (strlen(tdate) > 20) {
-      tdate[20] = '\0';
+    if (ptr == NULL) {
+      continue;
     }
-    printf("%-10d\t\t%-10d\t\t%-10d\t\t%-20s\n",
-           transaction_ds[i].transaction_id,
-           transaction_ds[i].transaction_product_id,
-           transaction_ds[i].transaction_quantity,
-           transaction_ds[i].transaction_date);
+    while (ptr != NULL) {
+      printf("%d|%d|%d|%s\n", ptr->node_data.transaction.transaction_id,
+             ptr->node_data.transaction.transaction_product_id,
+             ptr->node_data.transaction.transaction_quantity,
+             ptr->node_data.transaction.transaction_date);
+
+      ptr = ptr->next;
+    }
   }
 }
+
 void update_transaction(void) {
   int transid;
   printf("Enter PID to update: ");
   scanf("%d%*c", &transid);
 
-  if (check_existing(transid, TRANSACTION, transaction_count)) {
+  if (check_existing(transid, TRANSACTION)) {
     printf("=== TRANSACTION WITH ID %d ALREADY EXISTS ===\n", transid);
     return;
   }
 
-  for (int i = 0; i < transaction_count; i++) {
-    if (transaction_ds[i].transaction_id == transid) {
-      // this is temp storage for each input
-      char buff[MAX_STR_LEN];
+  for (int i = 0; i < MAPSIZE; i++) {
+    Node *ptr = prod_map[i];
 
-      printf("Hit Enter to accept current value\n");
-      printf("transaction PID(%d): ", transaction_ds[i].transaction_product_id);
-      // accept default if enter pressed
-      fgets(buff, MAX_STR_LEN, stdin);
-      if (buff[0] != '\n') {
-        remove_newlien_char(buff);
-        printf("%s\n", buff);
-        transaction_ds[i].transaction_id = atoi(buff);
-      }
+    if (ptr == NULL) {
+      printf("Emptry index\n");
+      continue;
+    }
 
-      printf("transaction quantity(%d): ",
-             transaction_ds[i].transaction_quantity);
-      fgets(buff, MAX_STR_LEN, stdin);
-      if (buff[0] != '\n') {
-        remove_newlien_char(buff);
-        printf("%s\n", buff);
-        transaction_ds[i].transaction_quantity = atoi(buff);
-      }
+    while (ptr != NULL) {
+      if (ptr->node_data.product.product_id == transid) {
+        char buff[MAX_STR_LEN];
 
-      printf("transaction Date(%s): ", transaction_ds[i].transaction_date);
-      fgets(buff, MAX_STR_LEN, stdin);
-      if (buff[0] != '\n') {
-        remove_newlien_char(buff);
-        strcpy(transaction_ds[i].transaction_date, buff);
+        printf("Hit Enter to accept current value\n");
+        printf("Transaction Date(%s): ",
+               ptr->node_data.transaction.transaction_date);
+
+        fgets(buff, MAX_STR_LEN, stdin);
+        if (buff[0] != '\n') {
+          remove_newlien_char(buff);
+          printf("%s\n", buff);
+          strcpy(ptr->node_data.transaction.transaction_date, buff);
+        }
+
+        printf("Transaction Product ID(%d): ",
+               ptr->node_data.transaction.transaction_product_id);
+        fgets(buff, MAX_STR_LEN, stdin);
+        if (buff[0] != '\n') {
+          remove_newlien_char(buff);
+          ptr->node_data.transaction.transaction_product_id = atoi(buff);
+        }
+
+        printf("Transaction quantity(%d): ",
+               ptr->node_data.transaction.transaction_quantity);
+        fgets(buff, MAX_STR_LEN, stdin);
+        if (buff[0] != '\n') {
+          remove_newlien_char(buff);
+
+          int old_quan = ptr->node_data.transaction.transaction_quantity;
+          int diff = atoi(buff) - old_quan;
+          update_stock(ptr->node_data.transaction.transaction_product_id, diff);
+
+          ptr->node_data.transaction.transaction_quantity = atoi(buff);
+        }
       }
     }
   }
