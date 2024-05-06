@@ -1,5 +1,6 @@
 #include "suppliers.h"
 #include "../../helper/helper.h"
+#include "../data/data.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -29,17 +30,8 @@ void append_supplier(void) {
   printf("Enter supplier address: ");
   scanf("%[^\n]%*c", snode->node_data.supplier.supplier_addr);
 
-  int hash = generate_hash(snode->node_data.supplier.supplier_id);
-  Node *head = sup_map[hash];
-
-  if (head == NULL) {
-      sup_map[hash] = snode;
-  } else {
-      snode->next = head;
-      sup_map[hash] = snode;
-  }
-
-  supplier_count++;
+  append_to_map(snode);
+  AOF_append("log.dat", snode);
 }
 
 void display_supplier(void) {
@@ -54,7 +46,8 @@ void display_supplier(void) {
       continue;
     }
     while (ptr != NULL) {
-      printf("%d|%s|%s\n", ptr->node_data.supplier.supplier_id,
+      printf("%p > %d|%s|%s\n", (void *)ptr,
+             ptr->node_data.supplier.supplier_id,
              ptr->node_data.supplier.supplier_name,
              ptr->node_data.supplier.supplier_addr);
 

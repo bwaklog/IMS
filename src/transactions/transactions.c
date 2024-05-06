@@ -1,5 +1,6 @@
 #include "transactions.h"
 #include "../../helper/helper.h"
+#include "../data/data.h"
 #include "../products/products.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -51,18 +52,8 @@ void append_transaction(void) {
   printf("Enter transaction date: ");
   scanf("%[^\n]%*c", tnode->node_data.transaction.transaction_date);
 
-  int hash = generate_hash(tnode->node_data.transaction.transaction_id);
-  Node *head = tran_map[hash];
-
-  if (head == NULL) {
-      tran_map[hash] = tnode;
-  } else {
-      tnode->next = head;
-      tran_map[hash] = tnode;
-  }
-
-
-  transaction_count++;
+  append_to_map(tnode);
+  AOF_append("log.dat", tnode);
 }
 
 void display_transaction(void) {
@@ -77,7 +68,8 @@ void display_transaction(void) {
       continue;
     }
     while (ptr != NULL) {
-      printf("%d|%d|%d|%s\n", ptr->node_data.transaction.transaction_id,
+      printf("%p > %d|%d|%d|%s\n", (void *)ptr,
+             ptr->node_data.transaction.transaction_id,
              ptr->node_data.transaction.transaction_product_id,
              ptr->node_data.transaction.transaction_quantity,
              ptr->node_data.transaction.transaction_date);

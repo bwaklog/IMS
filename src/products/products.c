@@ -1,5 +1,6 @@
 #include "products.h"
 #include "../../helper/helper.h"
+#include "../data/data.h"
 #include <stdalign.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -68,19 +69,8 @@ void append_product(void) {
     printf("Enter product quantity: ");
     scanf("%d%*c", &pnode->node_data.product.product_quantity);
 
-    int hash = generate_hash(pnode->node_data.product.product_id);
-
-    Node *head = prod_map[hash];
-
-    if (head == NULL) {
-        prod_map[hash] = pnode;
-    } else {
-        Node *temp = head;
-        pnode->next = temp;
-        prod_map[hash] = pnode;
-    }
-
-    product_count++;
+    append_to_map(pnode);
+    AOF_append("log.dat", pnode);
 }
 
 void display_product(void) {

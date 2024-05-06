@@ -5,7 +5,7 @@
 #define MAX 5
 #define MAPSIZE 10
 #define clear() printf("\x1b[H\x1b[J")
-//#define clear()
+// #define clear()
 
 typedef struct Product {
   int product_id;
@@ -29,6 +29,10 @@ typedef struct Transaction {
 
 typedef enum CLASS { PRODUCT, SUPPLIER, TRANSACTION } CLASS;
 
+typedef enum PRODFIELD { PNAME, PRICE, QUANTITY } PRODFIELD;
+typedef enum SUPPFIELD { SNAME, ADDR } SUPPFIELD;
+typedef enum TRANFIELD { PID, QTY, DATE } TRANFIELD;
+
 typedef struct Node {
   CLASS node_class;
 
@@ -45,9 +49,17 @@ Node *prod_map[MAPSIZE];
 Node *sup_map[MAPSIZE];
 Node *tran_map[MAPSIZE];
 
+extern int product_count;
+extern int supplier_count;
+extern int transaction_count;
+
 void remove_newlien_char(char *str);
 int check_existing(int id, CLASS class_type);
 int generate_hash(int id);
+
+int append_to_map(Node *n);
+void display_fetch(CLASS, Node *n);
+Node *fetch_map(int id, CLASS);
 
 void free_hashmaps(void);
 
