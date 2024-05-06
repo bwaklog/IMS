@@ -12,6 +12,7 @@ void append_supplier(void) {
   }
 
   Node *snode = (Node *)malloc(sizeof(Node));
+  snode->node_class = SUPPLIER;
 
   printf("Enter supplier id: ");
   int supid;
@@ -31,7 +32,7 @@ void append_supplier(void) {
   scanf("%[^\n]%*c", snode->node_data.supplier.supplier_addr);
 
   append_to_map(snode);
-  AOF_append("log.dat", snode);
+  AOF_append("log.dat", snode, OPADD);
 }
 
 void display_supplier(void) {
@@ -111,22 +112,7 @@ void remove_supplier(void) {
     return;
   }
 
-  for (int i = 0; i < 26; i++) {
-    Node *ptr = sup_map[i];
-    Node *prev = sup_map[i];
-
-    if (ptr == NULL) {
-      continue;
-    }
-
-    while (ptr != NULL) {
-      // if found
-      if (ptr->node_data.supplier.supplier_id == supid) {
-        prev->next = ptr->next;
-        free(ptr);
-      }
-      prev = ptr;
-      ptr = ptr->next;
-    }
-  }
+  Node *n = fetch_map(supid, SUPPLIER);
+  AOF_append("log.dat", n, OPDEL);
+  remove_from_map(supid, SUPPLIER);
 }

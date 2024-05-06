@@ -1,10 +1,13 @@
 #include "helper.h"
 #include <arm/types.h>
 #include <assert.h>
+#include <complex.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/_types/_null.h>
+#include <sys/_types/_off_t.h>
+#include <sys/wait.h>
 
 void remove_newlien_char(char *str) {
   int len = strlen(str);
@@ -110,11 +113,12 @@ int append_to_map(Node *n) {
   }
   case TRANSACTION: {
 
-      if (check_existing(n->node_data.transaction.transaction_id, n->node_class)) {
-          printf("[PREXISTING ID FOUND]: %d exists in transaction map\n",
-                 n->node_data.transaction.transaction_id);
-          return 1;
-      }
+    if (check_existing(n->node_data.transaction.transaction_id,
+                       n->node_class)) {
+      printf("[PREXISTING ID FOUND]: %d exists in transaction map\n",
+             n->node_data.transaction.transaction_id);
+      return 1;
+    }
 
     int hash = generate_hash(n->node_data.transaction.transaction_id);
     Node *head = sup_map[hash];
@@ -125,7 +129,7 @@ int append_to_map(Node *n) {
       n->next = temp;
       sup_map[hash] = n;
     }
-    supplier_count++;
+    transaction_count++;
     break;
   }
   default:
@@ -133,6 +137,84 @@ int append_to_map(Node *n) {
   }
 
   return 0;
+}
+
+int remove_from_map(int id, CLASS class_type) {
+  switch (class_type) {
+  case PRODUCT: {
+
+    int hash = generate_hash(id);
+
+    Node *ptr = prod_map[hash];
+    Node *prev = NULL;
+
+    if (ptr == NULL) {
+      printf("[NOT FOUND]: %d not found in product map\n", id);
+      return 1;
+    }
+
+    while (ptr != NULL) {
+      if (ptr->node_data.product.product_id == id) {
+        printf("[FOUND PRODUCT] DEL %p replace with %p\n", (void *)ptr,
+               (void *)ptr->next);
+        if (prev == NULL) {
+          prod_map[hash] = ptr->next;
+        } else {
+          prev->next = ptr->next;
+          free(ptr);
+          product_count--;
+          break;
+        }
+
+        prev = ptr;
+        ptr = ptr->next;
+
+      }
+    }
+
+    return 0;
+  }
+  case SUPPLIER: {
+    int hash = generate_hash(id);
+    Node *ptr = sup_map[hash];
+    Node *prev = NULL;
+
+    if (ptr == NULL) {
+      printf("[NOT FOUND]: %d not found in supplier map\n", id);
+      return 1;
+    }
+
+    while (ptr != NULL) {
+      if (ptr->node_data.supplier.supplier_id == id) {
+        printf("[FOUND SUPPLIER] DEL %p replace with %p\n", (void *)ptr,
+               (void *)ptr->next);
+        if (prev == NULL) {
+          sup_map[hash] = ptr->next;
+        } else {
+          prev->next = ptr->next;
+          free(ptr);
+          supplier_count--;
+          break;
+        }
+
+        prev = ptr;
+        ptr = ptr->next;
+
+      }
+    }
+
+    return 0;
+  }
+  case TRANSACTION: {
+    printf("[TRANSACTION] ERR : No remove implementation\n");
+    break;
+  }
+  default: {
+    break;
+  }
+  }
+
+  return 1;
 }
 
 void display_fetch(CLASS class, Node *n) {
@@ -227,13 +309,13 @@ void free_hashmaps(void) {
   for (int i = 0; i < MAPSIZE; i++) {
     Node *ptr = prod_map[i];
     if (ptr == NULL) {
-      printf("PROD_MAP[%d]: EMPTY\n", i);
+      // printf("PROD_MAP[%d]: EMPTY\n", i);
     } else {
       while (ptr != NULL) {
         Node *temp = ptr;
         ptr = ptr->next;
-        printf("SUP_MAP[%d]: %d freed\n", i,
-               temp->node_data.product.product_id);
+        // printf("PROD_MAP[%d]: %d freed\n", i,
+        //        temp->node_data.product.product_id);
         free(temp);
       }
     }
@@ -243,13 +325,13 @@ void free_hashmaps(void) {
   for (int i = 0; i < MAPSIZE; i++) {
     Node *ptr = sup_map[i];
     if (ptr == NULL) {
-      printf("SUP_MAP[%d]: EMPTY\n", i);
+      // printf("SUP_MAP[%d]: EMPTY\n", i);
     } else {
       while (ptr != NULL) {
         Node *temp = ptr;
         ptr = ptr->next;
-        printf("SUP_MAP[%d]: %d freed\n", i,
-               temp->node_data.supplier.supplier_id);
+        // printf("SUP_MAP[%d]: %d freed\n", i,
+        //        temp->node_data.supplier.supplier_id);
         free(temp);
       }
     }
@@ -259,13 +341,13 @@ void free_hashmaps(void) {
   for (int i = 0; i < MAPSIZE; i++) {
     Node *ptr = tran_map[i];
     if (ptr == NULL) {
-      printf("TRAN_MAP[%d]: EMPTY\n", i);
+      // printf("TRAN_MAP[%d]: EMPTY\n", i);
     } else {
       while (ptr != NULL) {
         Node *temp = ptr;
         ptr = ptr->next;
-        printf("TRAN_MAP[%d]: %d freed\n", i,
-               temp->node_data.transaction.transaction_id);
+        // printf("TRAN_MAP[%d]: %d freed\n", i,
+        //        temp->node_data.transaction.transaction_id);
         free(temp);
       }
     }

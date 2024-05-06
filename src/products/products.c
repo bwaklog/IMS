@@ -42,6 +42,7 @@ void append_product(void) {
     }
 
     Node *pnode = (Node *)malloc(sizeof(Node));
+    pnode->node_class = PRODUCT;
 
     if (pnode == NULL) {
         printf("FAILED: memory allocation\n");
@@ -70,7 +71,7 @@ void append_product(void) {
     scanf("%d%*c", &pnode->node_data.product.product_quantity);
 
     append_to_map(pnode);
-    AOF_append("log.dat", pnode);
+    AOF_append("log.dat", pnode, OPADD);
 }
 
 void display_product(void) {
@@ -161,28 +162,7 @@ void remove_product(void) {
         return;
     }
 
-    int hash = generate_hash(pid);
-
-    Node *ptr = prod_map[hash];
-    Node *prev = NULL;
-
-    if (ptr == NULL) {
-        printf("No such product\n");
-    }
-
-    while (ptr != NULL) {
-        if (ptr->node_data.product.product_id == pid) {
-            printf("Product found at %p, replacing with %p\n", (void *)ptr, (void *)ptr->next);
-            if (prev == NULL) {
-                prod_map[hash] = ptr->next;
-            } else {
-                prev->next = ptr->next;
-            }
-            free(ptr);
-            product_count--;
-            return;
-        }
-        prev = ptr;
-        ptr = ptr->next;
-    }
+    Node *n = fetch_map(pid, PRODUCT);
+    remove_from_map(pid, PRODUCT);
+    AOF_append("log.dat", n, OPDEL);
 }

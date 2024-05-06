@@ -14,6 +14,7 @@ void append_transaction(void) {
   }
 
   Node *tnode = (Node *)malloc(sizeof(Node));
+  tnode->node_class = TRANSACTION;
 
   printf("Enter transaction id: ");
 
@@ -53,7 +54,7 @@ void append_transaction(void) {
   scanf("%[^\n]%*c", tnode->node_data.transaction.transaction_date);
 
   append_to_map(tnode);
-  AOF_append("log.dat", tnode);
+  AOF_append("log.dat", tnode, OPADD);
 }
 
 void display_transaction(void) {

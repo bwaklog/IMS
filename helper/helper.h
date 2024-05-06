@@ -4,8 +4,8 @@
 #define MAX_STR_LEN 1024
 #define MAX 5
 #define MAPSIZE 10
-#define clear() printf("\x1b[H\x1b[J")
-// #define clear()
+// #define clear() printf("\x1b[H\x1b[J")
+#define clear()
 
 typedef struct Product {
   int product_id;
@@ -58,6 +58,7 @@ int check_existing(int id, CLASS class_type);
 int generate_hash(int id);
 
 int append_to_map(Node *n);
+int remove_from_map(int id, CLASS class_type);
 void display_fetch(CLASS, Node *n);
 Node *fetch_map(int id, CLASS);
 
