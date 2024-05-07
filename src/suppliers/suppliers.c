@@ -67,38 +67,36 @@ void update_supplier(void) {
     return;
   }
 
-  for (int i = 0; i < 26; i++) {
-    Node *ptr = sup_map[i];
+  Node *ptr = fetch_map(supid, SUPPLIER);
 
-    if (ptr == NULL) {
-      printf("Emptry index\n");
-      continue;
-    }
-    while (ptr != NULL) {
-      if (ptr->node_data.product.product_id == supid) {
-        char buff[MAX_STR_LEN];
-
-        printf("Hit Enter to accept current value\n");
-        printf("Supplier Name(%s): ", ptr->node_data.supplier.supplier_name);
-
-        fgets(buff, MAX_STR_LEN, stdin);
-        if (buff[0] != '\n') {
-          remove_newlien_char(buff);
-          printf("%s\n", buff);
-          strcpy(ptr->node_data.supplier.supplier_name, buff);
-        }
-
-        printf("Supplier Name(%s): ", ptr->node_data.supplier.supplier_addr);
-
-        fgets(buff, MAX_STR_LEN, stdin);
-        if (buff[0] != '\n') {
-          remove_newlien_char(buff);
-          printf("%s\n", buff);
-          strcpy(ptr->node_data.supplier.supplier_addr, buff);
-        }
-      }
-    }
+  if (ptr == NULL) {
+    printf("Emptry index\n");
+    return;
   }
+
+  char buff[MAX_STR_LEN];
+
+  printf("Hit Enter to accept current value\n");
+  printf("Supplier Name(%s): ", ptr->node_data.supplier.supplier_name);
+
+  fgets(buff, MAX_STR_LEN, stdin);
+  if (buff[0] != '\n') {
+    remove_newlien_char(buff);
+    printf("%s\n", buff);
+    strcpy(ptr->node_data.supplier.supplier_name, buff);
+  }
+
+  printf("Supplier Addr(%s): ", ptr->node_data.supplier.supplier_addr);
+
+  fgets(buff, MAX_STR_LEN, stdin);
+  if (buff[0] != '\n') {
+    remove_newlien_char(buff);
+    printf("%s\n", buff);
+    strcpy(ptr->node_data.supplier.supplier_addr, buff);
+  }
+
+  ptr = fetch_map(supid, SUPPLIER);
+  AOF_append("log.dat", ptr, OPSET);
 }
 
 void remove_supplier(void) {

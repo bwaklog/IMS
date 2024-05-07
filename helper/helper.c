@@ -217,6 +217,30 @@ int remove_from_map(int id, CLASS class_type) {
   return 1;
 }
 
+int update_node(int id, CLASS class_type, Node *updated_values) {
+    Node *n = fetch_map(id, class_type);
+    if (n == NULL) {
+        return 1;
+    }
+    switch (class_type) {
+        case PRODUCT: {
+            n->node_data = updated_values->node_data;
+            break;
+        }
+        case SUPPLIER: {
+            n->node_data = updated_values->node_data;
+            break;
+        }
+        case TRANSACTION: {
+            n->node_data = updated_values->node_data;
+            break;
+        }
+        default: break;
+    }
+
+    return 0;
+}
+
 void display_fetch(CLASS class, Node *n) {
   switch (class) {
   case PRODUCT: {

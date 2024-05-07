@@ -178,14 +178,32 @@ void reconstruct_logfile(char *log_filepath) {
       default:
         break;
       }
+      break;
     case OPSET: {
+
+      switch (n->node_class) {
+      case PRODUCT: {
+        update_node(n->node_data.product.product_id, PRODUCT, n);
+        break;
+      }
+      case SUPPLIER: {
+        update_node(n->node_data.product.product_id, SUPPLIER, n);
+        break;
+      }
+      case TRANSACTION: {
+        printf("[ERR]: Unimplemented for TRANSACTION\n");
+        break;
+      }
+      default:
+        break;
+      }
+
       break;
     }
     default:
       break;
     }
     }
-
   }
   fclose(log_file);
 }

@@ -19,8 +19,8 @@ Inventory Management System written in C
 - [ ] Implement complete data reconstruction
   - [x] `OPADD` implementation
   - [x] `OPDEL` implementation
-  - [ ] `OPSET` implementation
+  - [x] `OPSET` implementation
 - [ ] Optimise reconstruction by not performing redundant operations
-- [ ] Migrate to a client-server architecture 
+- [ ] Migrate to a client-server architecture
   - Users can connect over to server using something as simple as `netcat`
   - All operations are similar to *Redis* operations such as `SET`, `GET`, `DEL`...

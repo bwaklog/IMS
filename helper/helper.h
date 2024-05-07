@@ -59,6 +59,7 @@ int generate_hash(int id);
 
 int append_to_map(Node *n);
 int remove_from_map(int id, CLASS class_type);
+int update_node(int id, CLASS class_type, Node *updated_values);
 void display_fetch(CLASS, Node *n);
 Node *fetch_map(int id, CLASS);
 
