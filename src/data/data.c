@@ -125,6 +125,7 @@ void reconstruct_logfile(char *log_filepath) {
 
     Node *n = (Node *)malloc(sizeof(Node));
     n->next = NULL;
+    latest_log_id = log.id;
 
     switch (log.class_type) {
     case PRODUCT: {
@@ -187,11 +188,11 @@ void reconstruct_logfile(char *log_filepath) {
         break;
       }
       case SUPPLIER: {
-        update_node(n->node_data.product.product_id, SUPPLIER, n);
+        update_node(n->node_data.supplier.supplier_id, SUPPLIER, n);
         break;
       }
       case TRANSACTION: {
-        printf("[ERR]: Unimplemented for TRANSACTION\n");
+        update_node(n->node_data.transaction.transaction_product_id, TRANSACTION, n);
         break;
       }
       default:
@@ -211,7 +212,7 @@ void reconstruct_logfile(char *log_filepath) {
 void AOF_append(char *log_filepath, Node *n, OPCODE op) {
   FILE *log_file = fopen(log_filepath, "a+");
   if (log_file == NULL) {
-    printf("Log file provided [%s] is faulty\n", log_filepath);
+    printf("[ERR] Log file provided [%s] is faulty\n", log_filepath);
     exit(1);
   }
 

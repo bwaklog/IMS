@@ -3,8 +3,6 @@
 #define TRANSACTIONS_H
 #include "../../helper/helper.h"
 
-#define MAX 5
-
 extern int transaction_count;
 
 void append_transaction(void);

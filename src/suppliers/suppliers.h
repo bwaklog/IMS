@@ -3,8 +3,6 @@
 #define SUPPLIERS_H
 #include "../../helper/helper.h"
 
-#define MAX 5
-
 extern int supplier_count;
 
 void append_supplier(void);

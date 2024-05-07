@@ -8,44 +8,38 @@
 #include <sys/_types/_null.h>
 
 int get_product_quantity(int pid) {
-  int hash = generate_hash(pid);
-  Node *ptr = prod_map[hash];
+  // int hash = generate_hash(pid);
+  Node *ptr = fetch_map(pid, PRODUCT);
 
-  while (ptr != NULL) {
-    if (ptr->node_data.product.product_id == pid) {
-      return ptr->node_data.product.product_quantity;
-    }
-    ptr = ptr->next;
+  if (ptr == NULL) {
+      return -1;
   }
-
-  return 0;
+  // while (ptr != NULL) {
+  //   if (ptr->node_data.product.product_id == pid) {
+  //     return ptr->node_data.product.product_quantity;
+  //   }
+  //   ptr = ptr->next;
+  // }
+  return ptr->node_data.product.product_quantity;
 }
 
 void update_stock(int pid, int withdrawn) {
-
-  int hash = generate_hash(pid);
-  Node *ptr = prod_map[hash];
-
-  while (ptr != NULL) {
-    if (ptr->node_data.product.product_id == pid) {
-      ptr->node_data.product.product_quantity -= withdrawn;
-      return;
-    }
-    ptr = ptr->next;
-  }
+  Node *ptr = fetch_map(pid, PRODUCT);
+  ptr->node_data.product.product_quantity -= withdrawn;
+  AOF_append("log.dat", ptr, OPSET);
 }
 
 void append_product(void) {
-  if (product_count == MAX) {
-    printf("Product limit reached\n");
-    return;
-  }
+  // if (product_count == MAX) {
+  //   printf("Product limit reached\n");
+  //   return;
+  // }
 
   Node *pnode = (Node *)malloc(sizeof(Node));
   pnode->node_class = PRODUCT;
 
   if (pnode == NULL) {
-    printf("FAILED: memory allocation\n");
+    printf("[ERR] PRODUCT: failed memory allocation\n");
     return;
   }
 
@@ -55,7 +49,8 @@ void append_product(void) {
 
   //  checking for existing id, exit if found
   if (check_existing(pid, PRODUCT)) {
-    printf("=== PREXISTING ID FOUND ===\n");
+    printf("[ERR] PRODUCT: Existing ID found\n");
+    free(pnode);
     return;
   }
 
@@ -106,7 +101,7 @@ void update_product(void) {
 
   // check for prexisting id, exit if function returns 0
   if (!check_existing(pid, PRODUCT)) {
-    printf("=== NO SUCH PRODUCT EXISTS ===\n");
+    printf("[ERR] PRODUCT: No such product exists\n");
     return;
   }
 

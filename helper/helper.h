@@ -2,7 +2,7 @@
 #define HELPER_H
 
 #define MAX_STR_LEN 1024
-#define MAX 5
+#define MAX 100
 #define MAPSIZE 10
 // #define clear() printf("\x1b[H\x1b[J")
 #define clear()

@@ -121,13 +121,13 @@ int append_to_map(Node *n) {
     }
 
     int hash = generate_hash(n->node_data.transaction.transaction_id);
-    Node *head = sup_map[hash];
+    Node *head = tran_map[hash];
     if (head == NULL) {
-      sup_map[hash] = n;
+      tran_map[hash] = n;
     } else {
       Node *temp = head;
       n->next = temp;
-      sup_map[hash] = n;
+      tran_map[hash] = n;
     }
     transaction_count++;
     break;
@@ -334,13 +334,13 @@ void free_hashmaps(void) {
     Node *ptr = prod_map[i];
     if (ptr == NULL) {
       // printf("PROD_MAP[%d]: EMPTY\n", i);
+      continue;
     } else {
       while (ptr != NULL) {
         Node *temp = ptr;
         ptr = ptr->next;
-        // printf("PROD_MAP[%d]: %d freed\n", i,
-        //        temp->node_data.product.product_id);
         free(temp);
+        printf("[FREE] PRODUCT %p\n", (void *)temp);
       }
     }
   }
@@ -350,13 +350,13 @@ void free_hashmaps(void) {
     Node *ptr = sup_map[i];
     if (ptr == NULL) {
       // printf("SUP_MAP[%d]: EMPTY\n", i);
+      continue;
     } else {
       while (ptr != NULL) {
-        Node *temp = ptr;
-        ptr = ptr->next;
-        // printf("SUP_MAP[%d]: %d freed\n", i,
-        //        temp->node_data.supplier.supplier_id);
-        free(temp);
+          Node *temp = ptr;
+          ptr = ptr->next;
+          free(temp);
+          printf("[FREE] SUPPLIER %p\n", (void *)temp);
       }
     }
   }
@@ -366,13 +366,13 @@ void free_hashmaps(void) {
     Node *ptr = tran_map[i];
     if (ptr == NULL) {
       // printf("TRAN_MAP[%d]: EMPTY\n", i);
+      continue;
     } else {
       while (ptr != NULL) {
-        Node *temp = ptr;
-        ptr = ptr->next;
-        // printf("TRAN_MAP[%d]: %d freed\n", i,
-        //        temp->node_data.transaction.transaction_id);
-        free(temp);
+          Node *temp = ptr;
+          ptr = ptr->next;
+          free(temp);
+          printf("[FREE] TRANSACTION %p\n", (void *)temp);
       }
     }
   }

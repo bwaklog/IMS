@@ -6,12 +6,12 @@
 #include <string.h>
 
 void append_supplier(void) {
-  if (supplier_count == MAX) {
-    printf("supplier limit reached\n");
-    return;
-  }
+  // if (supplier_count == MAX) {
+  //   printf("supplier limit reached\n");
+  //   return;
+  // }
 
-  Node *snode = (Node *)malloc(sizeof(Node));
+  Node *snode = NULL;
   snode->node_class = SUPPLIER;
 
   printf("Enter supplier id: ");
@@ -62,8 +62,8 @@ void update_supplier(void) {
   printf("Enter PID to update: ");
   scanf("%d%*c", &supid);
 
-  if (!check_existing(supid, SUPPLIER)) {
-    printf("=== EXISTING SUPPLIER ID FOUND ===\n");
+  if (check_existing(supid, SUPPLIER)) {
+    printf("[ERR] SUPPLIER: No such supplier\n");
     return;
   }
 
