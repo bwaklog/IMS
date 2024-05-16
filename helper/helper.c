@@ -1,13 +1,7 @@
 #include "helper.h"
-#include <arm/types.h>
-#include <assert.h>
-#include <complex.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/_types/_null.h>
-#include <sys/_types/_off_t.h>
-#include <sys/wait.h>
 
 void remove_newlien_char(char *str) {
   int len = strlen(str);
@@ -339,7 +333,7 @@ void free_hashmaps(void) {
       while (ptr != NULL) {
         Node *temp = ptr;
         ptr = ptr->next;
-        free(temp);
+	free(temp);
         printf("[FREE] PRODUCT %p\n", (void *)temp);
       }
     }

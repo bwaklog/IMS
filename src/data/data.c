@@ -1,12 +1,8 @@
 #include "data.h"
-#include <complex.h>
-#include <malloc/_malloc_type.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/_types/_null.h>
-#include <sys/signal.h>
 
 int latest_log_id = 0;
 
@@ -111,13 +107,14 @@ char *translate_OPCODE(OPCODE op) {
 
 void reconstruct_logfile(char *log_filepath) {
   FILE *log_file = fopen(log_filepath, "r+");
+
   if (log_file == NULL) {
     printf("Log file provided [%s] is faulty\n", log_filepath);
-    fclose(log_file);
 
     FILE *file = fopen(log_filepath, "w+");
     fclose(file);
   }
+  
   log_file = fopen(log_filepath, "r+");
 
   Log log;

@@ -7,4 +7,4 @@ SRC = "src/main.c"
 
 
 all:
-	gcc ${CFLAGS} ${DEPS} ${SRC} -o main
+	${CC} ${CFLAGS} ${DEPS} ${SRC} -o main

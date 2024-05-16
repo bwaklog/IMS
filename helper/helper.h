@@ -45,9 +45,9 @@ typedef struct Node {
   struct Node *next;
 } Node;
 
-Node *prod_map[MAPSIZE];
-Node *sup_map[MAPSIZE];
-Node *tran_map[MAPSIZE];
+extern Node *prod_map[MAPSIZE];
+extern Node *sup_map[MAPSIZE];
+extern Node *tran_map[MAPSIZE];
 
 extern int product_count;
 extern int supplier_count;

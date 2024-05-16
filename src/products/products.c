@@ -1,11 +1,9 @@
 #include "products.h"
 #include "../../helper/helper.h"
 #include "../data/data.h"
-#include <stdalign.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/_types/_null.h>
 
 int get_product_quantity(int pid) {
   // int hash = generate_hash(pid);

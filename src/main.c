@@ -10,6 +10,10 @@ int product_count = 0;
 int supplier_count = 0;
 int transaction_count = 0;
 
+Node *prod_map[MAPSIZE];
+Node *sup_map[MAPSIZE];
+Node *tran_map[MAPSIZE];
+
 // Main function
 int main(void) {
   reconstruct_logfile("log.dat");
@@ -37,8 +41,8 @@ int main(void) {
              "Display Products\nq. Exit Product Mode\n(1/2/3/4/q): ");
       scanf("%c", &subchoice);
       getchar();
+      putchar('\n');
       switch (subchoice) {
-        putchar('\n');
       case '1':
         clear();
         printf("adding product\n");
@@ -80,8 +84,8 @@ int main(void) {
              "Display Suppliers\nq. Exit Supplier Mode\n(1/2/3/4/q): ");
       scanf("%c", &subchoice);
       getchar();
+      putchar('\n');
       switch (subchoice) {
-        putchar('\n');
       case '1':
         clear();
         printf("adding product\n");
@@ -123,8 +127,8 @@ int main(void) {
              "3. Display Products\nq. Exit Transaction Mode\n(1/2/3/q): ");
       scanf("%c", &subchoice);
       getchar();
+      putchar('\n');
       switch (subchoice) {
-        putchar('\n');
       case '1':
         clear();
         printf("adding transaction\n");
