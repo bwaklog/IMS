@@ -49,6 +49,10 @@ extern Node *prod_map[MAPSIZE];
 extern Node *sup_map[MAPSIZE];
 extern Node *tran_map[MAPSIZE];
 
+extern Node *prod_arr[MAX];
+extern Node *sup_arr[MAX];
+extern Node *tran_arr[MAX];
+
 extern int product_count;
 extern int supplier_count;
 extern int transaction_count;

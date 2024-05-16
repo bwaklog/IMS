@@ -106,8 +106,9 @@ char *translate_OPCODE(OPCODE op) {
 }
 
 void reconstruct_logfile(char *log_filepath) {
-  FILE *log_file = fopen(log_filepath, "r+");
+  FILE *log_file = fopen(log_filepath, "a+");
 
+  /*
   if (log_file == NULL) {
     printf("Log file provided [%s] is faulty\n", log_filepath);
 
@@ -116,6 +117,7 @@ void reconstruct_logfile(char *log_filepath) {
   }
   
   log_file = fopen(log_filepath, "r+");
+  */
 
   Log log;
   while (fread(&log, sizeof(Log), 1, log_file)) {
@@ -178,7 +180,6 @@ void reconstruct_logfile(char *log_filepath) {
       }
       break;
     case OPSET: {
-
       switch (n->node_class) {
       case PRODUCT: {
         update_node(n->node_data.product.product_id, PRODUCT, n);
@@ -202,6 +203,7 @@ void reconstruct_logfile(char *log_filepath) {
       break;
     }
     }
+    free(n);
   }
   fclose(log_file);
 }
