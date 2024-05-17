@@ -128,7 +128,7 @@ void addr_filter(char *addr) {
     }
 
     while (ptr != NULL) {
-      if (strcasecmp(addr, ptr->node_data.supplier.supplier_addr) == 0) {
+      if (strncmp(addr, ptr->node_data.supplier.supplier_addr, MAX_STR_LEN) == 0) {
         printf("%d|%s|%s\n", ptr->node_data.supplier.supplier_id,
                ptr->node_data.supplier.supplier_name,
                ptr->node_data.supplier.supplier_addr);
@@ -164,13 +164,11 @@ void bubble_sort_suppliers(void) {
             ptr = ptr->next;
         }
     }
-    printf("Hello\n");
 
     // bubble sorting the array
     for (int m = 0; m < supplier_count; m++) {
         for (int n = m; n < supplier_count; n++) {
-            // sort on name
-            if (strcasecmp(suppliers[m]->node_data.supplier.supplier_name, suppliers[n]->node_data.supplier.supplier_name) > 0) {
+            if (strcmp(suppliers[m]->node_data.supplier.supplier_name, suppliers[n]->node_data.supplier.supplier_name) > 0) {
                 Node *temp = suppliers[m];
                 suppliers[m] = suppliers[n];
                 suppliers[n] = temp;

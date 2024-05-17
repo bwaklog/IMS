@@ -4,8 +4,8 @@
 #define MAX_STR_LEN 1024
 #define MAX 100
 #define MAPSIZE 10
-// #define clear() printf("\x1b[H\x1b[J")
-#define clear()
+#define clear() printf("\x1b[H\x1b[J")
+// #define clear()
 
 typedef struct Product {
   int product_id;

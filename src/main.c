@@ -82,7 +82,7 @@ int main(void) {
       clear();
       printf("1. Add Supplier\n2. Update Supplier Details\n3. Delete Supplier "
              "Details\n4. "
-             "Display Suppliers\n5. Display Banglaore Suppliers\n6. Bubble "
+             "Display Suppliers\n5. Display Bangalore Suppliers\n6. Bubble "
              "sort suppliers\nq. Exit Supplier Mode\n(1/2/3/4/q): ");
       scanf("%c", &subchoice);
       getchar();
@@ -113,7 +113,7 @@ int main(void) {
         break;
       case '5':
         clear();
-        addr_filter("Bangalore");
+        addr_filter("bangalore");
         break;
       case '6':
         clear();
