@@ -203,7 +203,6 @@ void reconstruct_logfile(char *log_filepath) {
       break;
     }
     }
-    free(n);
   }
   fclose(log_file);
 }

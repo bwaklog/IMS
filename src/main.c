@@ -14,10 +14,16 @@ Node *prod_map[MAPSIZE];
 Node *sup_map[MAPSIZE];
 Node *tran_map[MAPSIZE];
 
+Node *prod_arr;
+Node *sup_arr;
+Node *tran_arr;
+
 // Main function
 int main(void) {
   reconstruct_logfile("log.dat");
-
+  prod_arr = (Node *)malloc(sizeof(Node));
+  sup_arr = (Node *)malloc(sizeof(Node));
+  tran_arr = (Node *)malloc(sizeof(Node));
   char choice = '\0';
   char subchoice = '\0';
 
