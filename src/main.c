@@ -14,16 +14,11 @@ Node *prod_map[MAPSIZE];
 Node *sup_map[MAPSIZE];
 Node *tran_map[MAPSIZE];
 
-Node *prod_arr;
-Node *sup_arr;
-Node *tran_arr;
-
 // Main function
 int main(void) {
+
   reconstruct_logfile("log.dat");
-  prod_arr = (Node *)malloc(sizeof(Node));
-  sup_arr = (Node *)malloc(sizeof(Node));
-  tran_arr = (Node *)malloc(sizeof(Node));
+
   char choice = '\0';
   char subchoice = '\0';
 
@@ -87,7 +82,8 @@ int main(void) {
       clear();
       printf("1. Add Supplier\n2. Update Supplier Details\n3. Delete Supplier "
              "Details\n4. "
-             "Display Suppliers\nq. Exit Supplier Mode\n(1/2/3/4/q): ");
+             "Display Suppliers\n5. Display Banglaore Suppliers\n6. Bubble "
+             "sort suppliers\nq. Exit Supplier Mode\n(1/2/3/4/q): ");
       scanf("%c", &subchoice);
       getchar();
       putchar('\n');
@@ -115,6 +111,14 @@ int main(void) {
         printf("display supplier\n");
         display_supplier();
         break;
+      case '5':
+        clear();
+        addr_filter("Bangalore");
+        break;
+      case '6':
+        clear();
+        bubble_sort_suppliers();
+        break;
       case 'q':
         clear();
         printf("exiting supplier mode\n");
@@ -130,7 +134,9 @@ int main(void) {
     case '3':
       clear();
       printf("1. Add Transaction\n2. Update Transaction\n"
-             "3. Display Products\nq. Exit Transaction Mode\n(1/2/3/q): ");
+             "3. Display Products\n4. Less than 3 quan\n5. Transactions in "
+             "May\nq. "
+             "Exit Transaction Mode\n(1/2/3/q): ");
       scanf("%c", &subchoice);
       getchar();
       putchar('\n');
@@ -152,6 +158,13 @@ int main(void) {
         printf("display transaction\n");
         display_transaction();
         break;
+      case '4':
+        clear();
+        display_low_stock();
+        break;
+      case '5':
+        clear();
+        month_filter();
       case 'q':
         clear();
         printf("exiting transaction mode\n");

@@ -162,7 +162,6 @@ int remove_from_map(int id, CLASS class_type) {
 
         prev = ptr;
         ptr = ptr->next;
-
       }
     }
 
@@ -193,7 +192,6 @@ int remove_from_map(int id, CLASS class_type) {
 
         prev = ptr;
         ptr = ptr->next;
-
       }
     }
 
@@ -212,27 +210,28 @@ int remove_from_map(int id, CLASS class_type) {
 }
 
 int update_node(int id, CLASS class_type, Node *updated_values) {
-    Node *n = fetch_map(id, class_type);
-    if (n == NULL) {
-        return 1;
-    }
-    switch (class_type) {
-        case PRODUCT: {
-            n->node_data = updated_values->node_data;
-            break;
-        }
-        case SUPPLIER: {
-            n->node_data = updated_values->node_data;
-            break;
-        }
-        case TRANSACTION: {
-            n->node_data = updated_values->node_data;
-            break;
-        }
-        default: break;
-    }
+  Node *n = fetch_map(id, class_type);
+  if (n == NULL) {
+    return 1;
+  }
+  switch (class_type) {
+  case PRODUCT: {
+    n->node_data = updated_values->node_data;
+    break;
+  }
+  case SUPPLIER: {
+    n->node_data = updated_values->node_data;
+    break;
+  }
+  case TRANSACTION: {
+    n->node_data = updated_values->node_data;
+    break;
+  }
+  default:
+    break;
+  }
 
-    return 0;
+  return 0;
 }
 
 void display_fetch(CLASS class, Node *n) {
@@ -333,7 +332,7 @@ void free_hashmaps(void) {
       while (ptr != NULL) {
         Node *temp = ptr;
         ptr = ptr->next;
-	free(temp);
+        free(temp);
         printf("[FREE] PRODUCT %p\n", (void *)temp);
       }
     }
@@ -347,10 +346,10 @@ void free_hashmaps(void) {
       continue;
     } else {
       while (ptr != NULL) {
-          Node *temp = ptr;
-          ptr = ptr->next;
-          free(temp);
-          printf("[FREE] SUPPLIER %p\n", (void *)temp);
+        Node *temp = ptr;
+        ptr = ptr->next;
+        free(temp);
+        printf("[FREE] SUPPLIER %p\n", (void *)temp);
       }
     }
   }
@@ -363,10 +362,10 @@ void free_hashmaps(void) {
       continue;
     } else {
       while (ptr != NULL) {
-          Node *temp = ptr;
-          ptr = ptr->next;
-          free(temp);
-          printf("[FREE] TRANSACTION %p\n", (void *)temp);
+        Node *temp = ptr;
+        ptr = ptr->next;
+        free(temp);
+        printf("[FREE] TRANSACTION %p\n", (void *)temp);
       }
     }
   }

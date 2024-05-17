@@ -9,4 +9,10 @@ void append_transaction(void);
 void display_transaction(void);
 void update_transaction(void);
 
+void display_low_stock(void);
+void month_filter(void);
+
+void display_low_stock(void);
+void month_filter(void);
+
 #endif // !TRANSACTIONS_H

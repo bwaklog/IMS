@@ -152,3 +152,52 @@ void update_transaction(void) {
 
   AOF_append("log.dat", ptr, OPSET);
 }
+
+
+// 1. display transactions where quantity is less than 3
+void display_low_stock(void) {
+  for (int i = 0; i < MAPSIZE; i++) {
+    Node *ptr = tran_map[i];
+
+    if (ptr == NULL) {
+      continue;
+    }
+
+    while (ptr != NULL) {
+      if (ptr->node_data.transaction.transaction_quantity < 3) {
+        printf("%p > %d|%d|%d|%s\n", (void *)ptr,
+               ptr->node_data.transaction.transaction_id,
+               ptr->node_data.transaction.transaction_product_id,
+               ptr->node_data.transaction.transaction_quantity,
+               ptr->node_data.transaction.transaction_date);
+      }
+      ptr = ptr->next;
+    }
+  }
+}
+
+// 2. display all transactions where month is may
+// format of month is DD-MM-YR
+void month_filter(void) {
+  for (int i = 0; i < MAPSIZE; i++) {
+    Node *ptr = tran_map[i];
+
+    if (ptr == NULL) {
+      continue;
+    }
+
+    while (ptr != NULL) {
+
+      char *tok = strtok(ptr->node_data.transaction.transaction_date, "-");
+      tok = strtok(NULL, "-");
+      int month = atoi(tok);
+
+      if (month == 5) {
+        printf("%d|%d|%d|%s\n", ptr->node_data.transaction.transaction_id,
+               ptr->node_data.transaction.transaction_product_id,
+               ptr->node_data.transaction.transaction_quantity,
+               ptr->node_data.transaction.transaction_date);
+      }
+    }
+  }
+}

@@ -62,7 +62,7 @@ void update_supplier(void) {
   printf("Enter PID to update: ");
   scanf("%d%*c", &supid);
 
-  if (check_existing(supid, SUPPLIER)) {
+  if (!check_existing(supid, SUPPLIER)) {
     printf("[ERR] SUPPLIER: No such supplier\n");
     return;
   }
@@ -103,9 +103,10 @@ void remove_supplier(void) {
   // delete element from an array
   int supid;
   printf("Enter PID to update: ");
+
   scanf("%d%*c", &supid);
 
-  if (!check_existing(supid, SUPPLIER)) {
+  if (check_existing(supid, SUPPLIER) != 1) {
     printf("=== EXISTING SUPPLIER ID FOUND ===\n");
     return;
   }
@@ -115,4 +116,70 @@ void remove_supplier(void) {
   remove_from_map(supid, SUPPLIER);
 }
 
+void addr_filter(char *addr) {
 
+  bool found = false;
+
+  for (int i = 0; i < MAPSIZE; i++) {
+    Node *ptr = sup_map[i];
+
+    if (ptr == NULL) {
+      continue;
+    }
+
+    while (ptr != NULL) {
+      if (strcasecmp(addr, ptr->node_data.supplier.supplier_addr) == 0) {
+        printf("%d|%s|%s\n", ptr->node_data.supplier.supplier_id,
+               ptr->node_data.supplier.supplier_name,
+               ptr->node_data.supplier.supplier_addr);
+      }
+      found = true;
+      ptr = ptr->next;
+    }
+  }
+
+  if (!found) {
+      printf("No supplier with address %s\n", addr);
+  }
+}
+
+void bubble_sort_suppliers(void) {
+
+    // first filling an array with the supplier
+
+    Node *suppliers[supplier_count];
+
+    int i = 0;
+
+    for (int j = 0; j < MAPSIZE; j++) {
+        Node *ptr = sup_map[j];
+
+        if (ptr == NULL) {
+            continue;
+        }
+
+        while (ptr != NULL) {
+            suppliers[i] = ptr;
+            i++;
+            ptr = ptr->next;
+        }
+    }
+
+    // bubble sorting the array
+    for (int m = 0; m < supplier_count; m++) {
+        for (int n = m; n < supplier_count; n++) {
+            // sort on name
+            if (strcasecmp(suppliers[m]->node_data.supplier.supplier_name, suppliers[n]->node_data.supplier.supplier_name) > 0) {
+                Node *temp = suppliers[m];
+                suppliers[m] = suppliers[n];
+                suppliers[n] = temp;
+            }
+        }
+    }
+
+    for (int a = 0; a < supplier_count; a++) {
+        printf("%d|%s|%s\n", suppliers[a]->node_data.supplier.supplier_id,
+               suppliers[a]->node_data.supplier.supplier_name,
+               suppliers[a]->node_data.supplier.supplier_addr);
+    }
+}
