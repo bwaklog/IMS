@@ -164,6 +164,7 @@ void bubble_sort_suppliers(void) {
             ptr = ptr->next;
         }
     }
+    printf("Hello\n");
 
     // bubble sorting the array
     for (int m = 0; m < supplier_count; m++) {

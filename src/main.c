@@ -165,6 +165,7 @@ int main(void) {
       case '5':
         clear();
         month_filter();
+        break;
       case 'q':
         clear();
         printf("exiting transaction mode\n");

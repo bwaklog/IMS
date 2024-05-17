@@ -37,7 +37,7 @@ void append_transaction(void) {
   int pid;
   scanf("%d%*c", &pid);
 
-  if (!check_existing(pid, PRODUCT)) {
+  if (check_existing(pid, PRODUCT) != 1) {
     printf("[ERR] TRANSACTION: ID %d does not exist\n", pid);
     free(tnode);
     return;
@@ -153,7 +153,6 @@ void update_transaction(void) {
   AOF_append("log.dat", ptr, OPSET);
 }
 
-
 // 1. display transactions where quantity is less than 3
 void display_low_stock(void) {
   for (int i = 0; i < MAPSIZE; i++) {
@@ -188,7 +187,10 @@ void month_filter(void) {
 
     while (ptr != NULL) {
 
-      char *tok = strtok(ptr->node_data.transaction.transaction_date, "-");
+      char date[MAX_STR_LEN];
+      strcpy(date, ptr->node_data.transaction.transaction_date);
+
+      char *tok = strtok(date, "-");
       tok = strtok(NULL, "-");
       int month = atoi(tok);
 
@@ -198,6 +200,7 @@ void month_filter(void) {
                ptr->node_data.transaction.transaction_quantity,
                ptr->node_data.transaction.transaction_date);
       }
+      ptr = ptr->next;
     }
   }
 }

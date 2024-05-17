@@ -332,8 +332,8 @@ void free_hashmaps(void) {
       while (ptr != NULL) {
         Node *temp = ptr;
         ptr = ptr->next;
-        free(temp);
         printf("[FREE] PRODUCT %p\n", (void *)temp);
+        free(temp);
       }
     }
   }
@@ -348,8 +348,8 @@ void free_hashmaps(void) {
       while (ptr != NULL) {
         Node *temp = ptr;
         ptr = ptr->next;
-        free(temp);
         printf("[FREE] SUPPLIER %p\n", (void *)temp);
+        free(temp);
       }
     }
   }
@@ -364,8 +364,8 @@ void free_hashmaps(void) {
       while (ptr != NULL) {
         Node *temp = ptr;
         ptr = ptr->next;
-        free(temp);
         printf("[FREE] TRANSACTION %p\n", (void *)temp);
+        free(temp);
       }
     }
   }
