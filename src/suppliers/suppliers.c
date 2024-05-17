@@ -11,7 +11,7 @@ void append_supplier(void) {
   //   return;
   // }
 
-  Node *snode = NULL;
+  Node *snode = (Node *)malloc(sizeof(Node));
   snode->node_class = SUPPLIER;
 
   printf("Enter supplier id: ");
@@ -114,3 +114,5 @@ void remove_supplier(void) {
   AOF_append("log.dat", n, OPDEL);
   remove_from_map(supid, SUPPLIER);
 }
+
+
