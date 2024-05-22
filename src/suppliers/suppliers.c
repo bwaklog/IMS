@@ -32,7 +32,7 @@ void append_supplier(void) {
   scanf("%[^\n]%*c", snode->node_data.supplier.supplier_addr);
 
   append_to_map(snode);
-  AOF_append("log.dat", snode, OPADD);
+  store_to_file("store.csv", snode, OPADD);
 }
 
 void display_supplier(void) {
@@ -96,7 +96,7 @@ void update_supplier(void) {
   }
 
   ptr = fetch_map(supid, SUPPLIER);
-  AOF_append("log.dat", ptr, OPSET);
+  store_to_file("store.csv", ptr, OPSET);
 }
 
 void remove_supplier(void) {
@@ -112,7 +112,7 @@ void remove_supplier(void) {
   }
 
   Node *n = fetch_map(supid, SUPPLIER);
-  AOF_append("log.dat", n, OPDEL);
+  store_to_file("store.csv", n, OPDEL);
   remove_from_map(supid, SUPPLIER);
 }
 
@@ -128,7 +128,8 @@ void addr_filter(char *addr) {
     }
 
     while (ptr != NULL) {
-      if (strncmp(addr, ptr->node_data.supplier.supplier_addr, MAX_STR_LEN) == 0) {
+      if (strncmp(addr, ptr->node_data.supplier.supplier_addr, MAX_STR_LEN) ==
+          0) {
         printf("%d|%s|%s\n", ptr->node_data.supplier.supplier_id,
                ptr->node_data.supplier.supplier_name,
                ptr->node_data.supplier.supplier_addr);
@@ -139,46 +140,47 @@ void addr_filter(char *addr) {
   }
 
   if (!found) {
-      printf("No supplier with address %s\n", addr);
+    printf("No supplier with address %s\n", addr);
   }
 }
 
 void bubble_sort_suppliers(void) {
 
-    // first filling an array with the supplier
+  // first filling an array with the supplier
 
-    Node *suppliers[supplier_count];
+  Node *suppliers[supplier_count];
 
-    int i = 0;
+  int i = 0;
 
-    for (int j = 0; j < MAPSIZE; j++) {
-        Node *ptr = sup_map[j];
+  for (int j = 0; j < MAPSIZE; j++) {
+    Node *ptr = sup_map[j];
 
-        if (ptr == NULL) {
-            continue;
-        }
-
-        while (ptr != NULL) {
-            suppliers[i] = ptr;
-            i++;
-            ptr = ptr->next;
-        }
+    if (ptr == NULL) {
+      continue;
     }
 
-    // bubble sorting the array
-    for (int m = 0; m < supplier_count; m++) {
-        for (int n = m; n < supplier_count; n++) {
-            if (strcmp(suppliers[m]->node_data.supplier.supplier_name, suppliers[n]->node_data.supplier.supplier_name) > 0) {
-                Node *temp = suppliers[m];
-                suppliers[m] = suppliers[n];
-                suppliers[n] = temp;
-            }
-        }
+    while (ptr != NULL) {
+      suppliers[i] = ptr;
+      i++;
+      ptr = ptr->next;
     }
+  }
 
-    for (int a = 0; a < supplier_count; a++) {
-        printf("%d|%s|%s\n", suppliers[a]->node_data.supplier.supplier_id,
-               suppliers[a]->node_data.supplier.supplier_name,
-               suppliers[a]->node_data.supplier.supplier_addr);
+  // bubble sorting the array
+  for (int m = 0; m < supplier_count; m++) {
+    for (int n = m; n < supplier_count; n++) {
+      if (strcmp(suppliers[m]->node_data.supplier.supplier_name,
+                 suppliers[n]->node_data.supplier.supplier_name) > 0) {
+        Node *temp = suppliers[m];
+        suppliers[m] = suppliers[n];
+        suppliers[n] = temp;
+      }
     }
+  }
+
+  for (int a = 0; a < supplier_count; a++) {
+    printf("%d|%s|%s\n", suppliers[a]->node_data.supplier.supplier_id,
+           suppliers[a]->node_data.supplier.supplier_name,
+           suppliers[a]->node_data.supplier.supplier_addr);
+  }
 }

@@ -10,7 +10,7 @@ int get_product_quantity(int pid) {
   Node *ptr = fetch_map(pid, PRODUCT);
 
   if (ptr == NULL) {
-      return -1;
+    return -1;
   }
   // while (ptr != NULL) {
   //   if (ptr->node_data.product.product_id == pid) {
@@ -24,7 +24,8 @@ int get_product_quantity(int pid) {
 void update_stock(int pid, int withdrawn) {
   Node *ptr = fetch_map(pid, PRODUCT);
   ptr->node_data.product.product_quantity -= withdrawn;
-  AOF_append("log.dat", ptr, OPSET);
+  // AOF_append("log.dat", ptr, OPSET);
+  store_to_file("store.csv", ptr, OPSET);
 }
 
 void append_product(void) {
@@ -64,7 +65,7 @@ void append_product(void) {
   scanf("%d%*c", &pnode->node_data.product.product_quantity);
 
   append_to_map(pnode);
-  AOF_append("log.dat", pnode, OPADD);
+  store_to_file("store.csv", pnode, OPADD);
 }
 
 void display_product(void) {
@@ -137,8 +138,7 @@ void update_product(void) {
   }
 
   // update_node(pid, PRODUCT, ptr);
-  AOF_append("log.dat", ptr, OPSET);
-
+  store_to_file("store.csv", ptr, OPSET);
 }
 
 void remove_product(void) {
@@ -154,6 +154,6 @@ void remove_product(void) {
   }
 
   Node *n = fetch_map(pid, PRODUCT);
+  store_to_file("store.csv", n, OPDEL);
   remove_from_map(pid, PRODUCT);
-  AOF_append("log.dat", n, OPDEL);
 }

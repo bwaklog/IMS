@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/_types/_s_ifmt.h>
+#include <sys/stat.h>
 
 int latest_log_id = 0;
 
@@ -17,15 +19,11 @@ Log parse_log_hr(char *log_line) {
   Log log;
 
   // order of operations
-  // Operation id | Operation Class type | Operation data
-
-  log.id = atoi(token);
-  latest_log_id = log.id;
+  // Operation Type | Operation Class Type | Operation data
+  log.op = (OPCODE)atoi(token);
 
   token = strtok(NULL, "|");
-
   log.class_type = (CLASS)atoi(token);
-
   token = strtok(NULL, "|");
 
   switch (log.class_type) {
@@ -105,48 +103,55 @@ char *translate_OPCODE(OPCODE op) {
   }
 }
 
-void reconstruct_logfile(char *log_filepath) {
-  FILE *log_file = fopen(log_filepath, "a+");
+void reconstruct_data(char *store_filepath) {
+  FILE *store_file = fopen(store_filepath, "r");
 
-  /*
-  if (log_file == NULL) {
-    printf("Log file provided [%s] is faulty\n", log_filepath);
+  if (store_file == NULL) {
+    // create file store_filepath
 
-    FILE *file = fopen(log_filepath, "w+");
-    fclose(file);
+    store_file = fopen(store_filepath, "w");
+    if (store_file == NULL) {
+      perror("Error in reading file");
+      return;
+    }
+
+    fclose(store_file);
+
+    store_file = fopen(store_filepath, "r");
+    if (store_file == NULL) {
+      perror("Error in opening file\n");
+      return;
+    }
   }
-  
-  log_file = fopen(log_filepath, "r+");
-  */
 
-  Log log;
-  while (fread(&log, sizeof(Log), 1, log_file)) {
+  char line[MAX_STR_LEN];
+
+  // while (fgets(line, MAX_STR_LEN, store_file) != NULL) {
+  while (fgets(line, MAX_STR_LEN, store_file)) {
 
     Node *n = (Node *)malloc(sizeof(Node));
-    n->next = NULL;
-    latest_log_id = log.id;
+    Log log = parse_log_hr(line);
 
     switch (log.class_type) {
     case PRODUCT: {
-      printf("[%d] PRODUCT %s: %d | %s | %f | %d\n", log.id,
-             translate_OPCODE(log.op), log.data.product.product_id,
-             log.data.product.product_name, log.data.product.product_price,
-             log.data.product.product_quantity);
+      printf("PRODUCT %s: %d | %s | %f | %d\n", translate_OPCODE(log.op),
+             log.data.product.product_id, log.data.product.product_name,
+             log.data.product.product_price, log.data.product.product_quantity);
       n->node_data.product = log.data.product;
       n->node_class = PRODUCT;
       break;
     }
     case SUPPLIER: {
-      printf("[%d] SUPPLIER %s: %d | %s | %s\n", log.id,
-             translate_OPCODE(log.op), log.data.supplier.supplier_id,
-             log.data.supplier.supplier_name, log.data.supplier.supplier_addr);
+      printf("SUPPLIER %s: %d | %s | %s\n", translate_OPCODE(log.op),
+             log.data.supplier.supplier_id, log.data.supplier.supplier_name,
+             log.data.supplier.supplier_addr);
       n->node_data.supplier = log.data.supplier;
       n->node_class = SUPPLIER;
       break;
     }
     case TRANSACTION: {
-      printf("[%d] TRANSACTION %s: %d | %d | %d | %s\n", log.id,
-             translate_OPCODE(log.op), log.data.transaction.transaction_id,
+      printf("TRANSACTION %s: %d | %d | %d | %s\n", translate_OPCODE(log.op),
+             log.data.transaction.transaction_id,
              log.data.transaction.transaction_product_id,
              log.data.transaction.transaction_quantity,
              log.data.transaction.transaction_date);
@@ -190,7 +195,8 @@ void reconstruct_logfile(char *log_filepath) {
         break;
       }
       case TRANSACTION: {
-        update_node(n->node_data.transaction.transaction_product_id, TRANSACTION, n);
+        update_node(n->node_data.transaction.transaction_product_id,
+                    TRANSACTION, n);
         break;
       }
       default:
@@ -204,43 +210,45 @@ void reconstruct_logfile(char *log_filepath) {
     }
     }
   }
-  fclose(log_file);
+  fclose(store_file);
 }
 
-void AOF_append(char *log_filepath, Node *n, OPCODE op) {
-  FILE *log_file = fopen(log_filepath, "a+");
-  if (log_file == NULL) {
-    printf("[ERR] Log file provided [%s] is faulty\n", log_filepath);
+// Operation id | Operation Class type | Operation data
+// write data to file in this manner
+void store_to_file(char *filename, Node *n, OPCODE op) {
+  FILE *store_file = fopen(filename, "a+");
+  if (store_file == NULL) {
+    printf("[ERR] Store file %s provided is faulty\n", filename);
+    perror("Error in opening file\n");
     exit(1);
   }
-
-  Log log;
-  log.class_type = n->node_class;
-  log.op = op;
-
-  switch (log.class_type) {
+  switch (n->node_class) {
   case PRODUCT: {
-    log.data.product = n->node_data.product;
+    fprintf(store_file, "%d|%d|%d,%s,%f,%d\n", op, PRODUCT,
+            n->node_data.product.product_id, n->node_data.product.product_name,
+            n->node_data.product.product_price,
+            n->node_data.product.product_quantity);
     break;
   }
   case SUPPLIER: {
-    log.data.supplier = n->node_data.supplier;
+    fprintf(store_file, "%d|%d|%d,%s,%s\n", op, SUPPLIER,
+            n->node_data.supplier.supplier_id,
+            n->node_data.supplier.supplier_name,
+            n->node_data.supplier.supplier_addr);
     break;
   }
   case TRANSACTION: {
-    log.data.transaction = n->node_data.transaction;
+    fprintf(store_file, "%d|%d|%d,%d,%d,%s\n", op, TRANSACTION,
+            n->node_data.transaction.transaction_id,
+            n->node_data.transaction.transaction_product_id,
+            n->node_data.transaction.transaction_quantity,
+            n->node_data.transaction.transaction_date);
     break;
   }
-  default:
+  default: {
     break;
   }
+  }
 
-  // get latest id
-  log.id = latest_log_id + 1;
-  log.valid = true;
-
-  // append the struct to the file
-  fwrite(&log, sizeof(Log), 1, log_file);
-  printf("Appended %s operation\n", translate_OPCODE(log.op));
-  fclose(log_file);
+  fclose(store_file);
 }

@@ -8,3 +8,8 @@ SRC = "src/main.c"
 
 all:
 	${CC} ${CFLAGS} ${DEPS} ${SRC} -o main
+
+clean: 
+	@echo "Removing debug files"
+	@rm -rf main.dSYM	# debug symbol file on OSX systems
+	@rm -f main 			# executable file

@@ -1,0 +1,31 @@
+* IMS - Inventory Management System
+
+LICENSE: MIT
+Version: 0.1
+Author: Aditya Hegde
+
+This program is part of the course (UE23CS151B) case study assignment.
+Scope is to produce an application to manage inventory of a store and 
+maintain records related to the products, suppliers and transactions.
+
+
+** Todo
+
+- Querying directly from file
+- Optimise reconstruction by not performing redundant operations
+- Migrate to a client-server architecture
+  - Users can connect over to server using something as simple 
+    as `netcat`
+  - All operations are similar to *Redis* operations such as 
+    `SET`, `GET`, `DEL`...
+
+** Completed
+
+- Storage of buckets
+- Modifying value of buckets
+- Deleting Buckets
+- Implementing a more dynamic Data structure
+- Implement complete data reconstruction
+  - `OPADD` implementation
+  - `OPDEL` implementation
+  - `OPSET` implementation

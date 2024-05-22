@@ -1,3 +1,17 @@
+/*******************************************************************************
+ *  IMS - Inventory Management System
+ *
+ *  Repository: github.com/bwaklog/ims.git
+ *  LICENSE: MIT
+ *
+ *  Version: 1.0
+ *  Author: Aditya Hegde
+ *
+ *  This program is part of the course (UE23CS151B) case study assignment. Scope
+ *  is to produce an application to manage inventory of a store and maintain
+ *  records related to the products, suppliers and transactions.
+ * *****************************************************************************/
+
 #include "data/data.h"
 #include "products/products.h"
 #include "suppliers/suppliers.h"
@@ -17,7 +31,7 @@ Node *tran_map[MAPSIZE];
 // Main function
 int main(void) {
 
-  reconstruct_logfile("log.dat");
+  reconstruct_data("store.csv");
 
   char choice = '\0';
   char subchoice = '\0';

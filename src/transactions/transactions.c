@@ -61,7 +61,7 @@ void append_transaction(void) {
   scanf("%[^\n]%*c", tnode->node_data.transaction.transaction_date);
 
   append_to_map(tnode);
-  AOF_append("log.dat", tnode, OPADD);
+  store_to_file("store.csv", tnode, OPADD);
 }
 
 void display_transaction(void) {
@@ -97,16 +97,6 @@ void update_transaction(void) {
     return;
   }
 
-  // for (int i = 0; i < MAPSIZE; i++) {
-  //   Node *ptr = prod_map[i];
-
-  //   if (ptr == NULL) {
-  //     printf("Emptry index\n");
-  //     continue;
-  //   }
-
-  //   while (ptr != NULL) {
-  //     if (ptr->node_data.product.product_id == transid) {
   Node *ptr = fetch_map(transid, TRANSACTION);
   char buff[MAX_STR_LEN];
 
@@ -150,7 +140,7 @@ void update_transaction(void) {
     ptr->node_data.transaction.transaction_quantity = atoi(buff);
   }
 
-  AOF_append("log.dat", ptr, OPSET);
+  store_to_file("store.csv", ptr, OPSET);
 }
 
 // 1. display transactions where quantity is less than 3
